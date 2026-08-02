@@ -17,22 +17,48 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             // Проверяем, что сцена является окном
             guard let windowScene = (scene as? UIWindowScene) else { return }
             
-            // Инициализируем физическое окно на экране
-            let window = UIWindow(windowScene: windowScene)
-            
-            // Создаем первый контроллер (экран)
-            // Замени ViewController на имя своего класса, если переименовал его
-            let rootVC = ImagesListViewController()
-            
-            // Оборачиваем в NavigationController (если нужна навигация и шторки сверху)
-            //let navigationVC = UINavigationController(rootViewController: rootVC)
-            
-            // Устанавливаем его как главный экран приложения
-            window.rootViewController = rootVC
-            
-            //  Сохраняем ссылку на окно и делаем его видимым
-            self.window = window
-            window.makeKeyAndVisible()
+        let tabBarController = UITabBarController()
+        tabBarController.tabBar.tintColor = .white // цвет активной иконки
+        tabBarController.tabBar.barTintColor = .black
+        
+        //пробую прозрачность бара
+//        let appearance = UITabBarAppearance()
+//        appearance.configureWithTransparentBackground()
+//        tabBarController.tabBar.standardAppearance = appearance
+//        tabBarController.tabBar.scrollEdgeAppearance = appearance
+        
+        let imageListVC = ImagesListViewController()
+        imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 0)
+        
+        let profileVC = ProfileViewController()
+        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 1)
+        
+        tabBarController.viewControllers = [imageListVC, profileVC]
+        
+        //теперь нужно как-то сделать таб бар главным экраном приложения
+        
+        let window = UIWindow(windowScene: windowScene)
+        window.rootViewController = tabBarController
+        self.window = window
+        window.makeKeyAndVisible()
+        
+        
+//            // Инициализируем физическое окно на экране
+//            let window = UIWindow(windowScene: windowScene)
+//            
+//            // Создаем первый контроллер (экран)
+//            // Замени ViewController на имя своего класса, если переименовал его
+//            let rootVC = ImagesListViewController()
+//            
+//            // Оборачиваем в NavigationController (если нужна навигация и шторки сверху)
+//            //let navigationVC = UINavigationController(rootViewController: rootVC)
+//            
+//            // Устанавливаем его как главный экран приложения
+//            window.rootViewController = rootVC
+//            
+//            //  Сохраняем ссылку на окно и делаем его видимым
+//            self.window = window
+//            window.makeKeyAndVisible()
     }
 
         
