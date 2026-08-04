@@ -18,31 +18,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             guard let windowScene = (scene as? UIWindowScene) else { return }
             
         let tabBarController = UITabBarController()
-        tabBarController.tabBar.tintColor = .white // цвет активной иконки
-        tabBarController.tabBar.barTintColor = .black
+        //tabBarController.tabBar.tintColor = .ypWhite
+                
+        let appearance = UITabBarAppearance()
         
-        //пробую прозрачность бара
-//        let appearance = UITabBarAppearance()
-//        appearance.configureWithTransparentBackground()
-//        tabBarController.tabBar.standardAppearance = appearance
-//        tabBarController.tabBar.scrollEdgeAppearance = appearance
-        
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .launchScreen
+
+        appearance.stackedLayoutAppearance.selected.iconColor = .ypWhite
+       
+
+        tabBarController.tabBar.standardAppearance = appearance
+        tabBarController.tabBar.scrollEdgeAppearance = appearance
+                
         let imageListVC = ImagesListViewController()
-        imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 0)
-        
+        let imageListNavigationVC = UINavigationController(rootViewController: imageListVC)
+        imageListNavigationVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "rectangle.stack.fill"), tag: 0)
+
         let profileVC = ProfileViewController()
-        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 1)
+        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.crop.circle.fill"), tag: 1)
         
-        tabBarController.viewControllers = [imageListVC, profileVC]
-        
-        //теперь нужно как-то сделать таб бар главным экраном приложения
+        tabBarController.viewControllers = [imageListNavigationVC, profileVC]
+       
         
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()
-        
-        
+                
 //            // Инициализируем физическое окно на экране
 //            let window = UIWindow(windowScene: windowScene)
 //            

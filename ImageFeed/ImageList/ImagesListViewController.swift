@@ -8,8 +8,7 @@
 import UIKit
 
 class ImagesListViewController: UIViewController {
-    
-    
+            
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
     private let table: UITableView = {
@@ -42,6 +41,7 @@ class ImagesListViewController: UIViewController {
         
         setupUI()
         // Do any additional setup after loading the view.
+        
     }
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
