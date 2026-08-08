@@ -85,6 +85,16 @@ class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let singleImageViewController = SingleImageViewController()
+        singleImageViewController.modalPresentationStyle = .fullScreen
+        
+        let imageName = photosName[indexPath.row]
+        singleImageViewController.image = UIImage(named: imageName)
+        
+        self.present(singleImageViewController, animated: true, completion: nil)
+        //navigationController?.pushViewController(singleImageViewController, animated: true)
+        
         
     }
     

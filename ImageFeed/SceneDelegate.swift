@@ -18,27 +18,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             guard let windowScene = (scene as? UIWindowScene) else { return }
             
         let tabBarController = UITabBarController()
-        //tabBarController.tabBar.tintColor = .ypWhite
-                
         let appearance = UITabBarAppearance()
-        
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .launchScreen
-
         appearance.stackedLayoutAppearance.selected.iconColor = .ypWhite
        
-
         tabBarController.tabBar.standardAppearance = appearance
         tabBarController.tabBar.scrollEdgeAppearance = appearance
                 
+        
         let imageListVC = ImagesListViewController()
-        let imageListNavigationVC = UINavigationController(rootViewController: imageListVC)
-        imageListNavigationVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "rectangle.stack.fill"), tag: 0)
+        //let imageListNavigationVC = UINavigationController(rootViewController: imageListVC)
+        //let imageListNavigationAppearance = UINavigationBarAppearance()
+        
+//        imageListNavigationAppearance.configureWithOpaqueBackground() // Или .configureWithTransparentBackground()
+//        imageListNavigationAppearance.backgroundColor = .launchScreen
+        
+//        //Создаем объект настроек для кнопок
+//        let buttonApp = UIBarButtonItemAppearance(style: .plain)
+//
+//        // Задаем цвет для обычного состояния
+//        buttonApp.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
+//
+//        // Задаем цвет для нажатого состояния
+//        buttonApp.highlighted.titleTextAttributes = [.foregroundColor: UIColor.white.withAlphaComponent(0.5)]
+
+//        // Применяем настройки к обычным кнопкам и кнопке "Назад"
+//        imageListNavigationAppearance.buttonAppearance = buttonApp
+//        imageListNavigationAppearance.backButtonAppearance = buttonApp
+//
+//        // Привязываем appearance к навигейшн-бару
+//        imageListNavigationVC.navigationBar.standardAppearance = imageListNavigationAppearance
+//        imageListNavigationVC.navigationBar.scrollEdgeAppearance = imageListNavigationAppearance
+        
+        
+        imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 0)
 
         let profileVC = ProfileViewController()
-        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(systemName: "person.crop.circle.fill"), tag: 1)
+        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 1)
         
-        tabBarController.viewControllers = [imageListNavigationVC, profileVC]
+        tabBarController.viewControllers = [imageListVC, profileVC]
        
         
         let window = UIWindow(windowScene: windowScene)

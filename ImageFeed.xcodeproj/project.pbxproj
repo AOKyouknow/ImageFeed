@@ -13,6 +13,7 @@
 		00013E1130160E7D00F37A37 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00013E1030160E7D00F37A37 /* Assets.xcassets */; };
 		00013E3C301A9A9A00F37A37 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00013E3B301A9A9A00F37A37 /* ImagesListCell.swift */; };
 		00013E3F301E859500F37A37 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00013E3E301E859500F37A37 /* ProfileViewController.swift */; };
+		001825773023AB2E00C2712B /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001825763023AB2E00C2712B /* SingleImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		00013E1530160E7D00F37A37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00013E3B301A9A9A00F37A37 /* ImagesListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		00013E3E301E859500F37A37 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		001825763023AB2E00C2712B /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				00013E1030160E7D00F37A37 /* Assets.xcassets */,
 				00013E1530160E7D00F37A37 /* Info.plist */,
 				00013E3E301E859500F37A37 /* ProfileViewController.swift */,
+				001825763023AB2E00C2712B /* SingleImageViewController.swift */,
 			);
 			path = ImageFeed;
 			sourceTree = "<group>";
@@ -148,6 +151,7 @@
 				00013E3C301A9A9A00F37A37 /* ImagesListCell.swift in Sources */,
 				00013E3F301E859500F37A37 /* ProfileViewController.swift in Sources */,
 				00013E0830160E7A00F37A37 /* AppDelegate.swift in Sources */,
+				001825773023AB2E00C2712B /* SingleImageViewController.swift in Sources */,
 				00013E0A30160E7A00F37A37 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
