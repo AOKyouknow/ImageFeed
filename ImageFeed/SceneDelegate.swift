@@ -28,28 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 
         
         let imageListVC = ImagesListViewController()
-        //let imageListNavigationVC = UINavigationController(rootViewController: imageListVC)
-        //let imageListNavigationAppearance = UINavigationBarAppearance()
-        
-//        imageListNavigationAppearance.configureWithOpaqueBackground() // Или .configureWithTransparentBackground()
-//        imageListNavigationAppearance.backgroundColor = .launchScreen
-        
-//        //Создаем объект настроек для кнопок
-//        let buttonApp = UIBarButtonItemAppearance(style: .plain)
-//
-//        // Задаем цвет для обычного состояния
-//        buttonApp.normal.titleTextAttributes = [.foregroundColor: UIColor.white]
-//
-//        // Задаем цвет для нажатого состояния
-//        buttonApp.highlighted.titleTextAttributes = [.foregroundColor: UIColor.white.withAlphaComponent(0.5)]
-
-//        // Применяем настройки к обычным кнопкам и кнопке "Назад"
-//        imageListNavigationAppearance.buttonAppearance = buttonApp
-//        imageListNavigationAppearance.backButtonAppearance = buttonApp
-//
-//        // Привязываем appearance к навигейшн-бару
-//        imageListNavigationVC.navigationBar.standardAppearance = imageListNavigationAppearance
-//        imageListNavigationVC.navigationBar.scrollEdgeAppearance = imageListNavigationAppearance
         
         
         imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 0)
@@ -64,23 +42,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()
-                
-//            // Инициализируем физическое окно на экране
-//            let window = UIWindow(windowScene: windowScene)
-//            
-//            // Создаем первый контроллер (экран)
-//            // Замени ViewController на имя своего класса, если переименовал его
-//            let rootVC = ImagesListViewController()
-//            
-//            // Оборачиваем в NavigationController (если нужна навигация и шторки сверху)
-//            //let navigationVC = UINavigationController(rootViewController: rootVC)
-//            
-//            // Устанавливаем его как главный экран приложения
-//            window.rootViewController = rootVC
-//            
-//            //  Сохраняем ссылку на окно и делаем его видимым
-//            self.window = window
-//            window.makeKeyAndVisible()
     }
 
         

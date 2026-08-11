@@ -32,15 +32,13 @@ class ImagesListViewController: UIViewController {
         
         table.rowHeight = 200
         table.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        
-        
+                
         table.register(
             ImagesListCell.self,
             forCellReuseIdentifier: ImagesListCell.reuseIdentifier
         )
         
         setupUI()
-        // Do any additional setup after loading the view.
         
     }
     
@@ -63,24 +61,18 @@ class ImagesListViewController: UIViewController {
         
     }
     
-    
-    
     func setupUI() {
-        //view.backgroundColor = .launchScreen
         table.backgroundColor = .launchScreen
         table.separatorStyle = .none
         view.addSubview(table)
-        
         
         NSLayoutConstraint.activate([
             table.topAnchor.constraint(equalTo: view.topAnchor),
             table.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            
         ])
     }
-    
 }
 
 extension ImagesListViewController: UITableViewDelegate {
@@ -93,9 +85,6 @@ extension ImagesListViewController: UITableViewDelegate {
         singleImageViewController.image = UIImage(named: imageName)
         
         self.present(singleImageViewController, animated: true, completion: nil)
-        //navigationController?.pushViewController(singleImageViewController, animated: true)
-        
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
