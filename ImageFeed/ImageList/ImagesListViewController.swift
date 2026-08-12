@@ -7,9 +7,8 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
-    
-    
+final class ImagesListViewController: UIViewController {
+            
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     
     private let table: UITableView = {
@@ -33,15 +32,14 @@ class ImagesListViewController: UIViewController {
         
         table.rowHeight = 200
         table.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        
-        
+                
         table.register(
             ImagesListCell.self,
             forCellReuseIdentifier: ImagesListCell.reuseIdentifier
         )
         
         setupUI()
-        // Do any additional setup after loading the view.
+        
     }
     
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
@@ -63,29 +61,30 @@ class ImagesListViewController: UIViewController {
         
     }
     
-    
-    
     func setupUI() {
-        //view.backgroundColor = .launchScreen
         table.backgroundColor = .launchScreen
         table.separatorStyle = .none
         view.addSubview(table)
-        
         
         NSLayoutConstraint.activate([
             table.topAnchor.constraint(equalTo: view.topAnchor),
             table.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             table.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             table.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            
         ])
     }
-    
 }
 
 extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let singleImageViewController = SingleImageViewController()
+        singleImageViewController.modalPresentationStyle = .fullScreen
         
+        let imageName = photosName[indexPath.row]
+        singleImageViewController.image = UIImage(named: imageName)
+        
+        self.present(singleImageViewController, animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
