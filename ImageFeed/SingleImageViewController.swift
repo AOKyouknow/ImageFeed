@@ -10,7 +10,7 @@ import UIKit
 class SingleImageViewController: UIViewController {
     
     var image: UIImage? {
-        didSet { // вот для чего наблюдатель - добавить условие до присвоения!
+        didSet {
             guard isViewLoaded, let image else { return }
             imageView.image = image
             rescaleAndCenterImageInScrollView(image: image)
@@ -25,8 +25,6 @@ class SingleImageViewController: UIViewController {
         guard let image else { return }
         setupUI()
         rescaleAndCenterImageInScrollView(image: image)
-        
-        
     }
     
     private lazy var backButton: UIButton = {
@@ -43,7 +41,6 @@ class SingleImageViewController: UIViewController {
     
     private var imageView: UIImageView = {
         let image = UIImageView()
-        //image.image = UIImage(named: "0")
         image.contentMode = .scaleAspectFit
         image.translatesAutoresizingMaskIntoConstraints = false
         return image
@@ -72,7 +69,6 @@ class SingleImageViewController: UIViewController {
     }()
     
     func setupUI() {
-        
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         
@@ -99,7 +95,6 @@ class SingleImageViewController: UIViewController {
             
             sharingButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -17),
             sharingButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            
         ])
     }
     
@@ -110,6 +105,9 @@ class SingleImageViewController: UIViewController {
         
         let visibleRectSize = scrollView.bounds.size
         let imageSize = image.size
+        
+        guard visibleRectSize.width > 0, visibleRectSize.height > 0, imageSize.width > 0, imageSize.height > 0 else { return }
+        
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
@@ -131,22 +129,16 @@ class SingleImageViewController: UIViewController {
     private func centerImage() {
         let visibleRectSize = scrollView.bounds.size
         
-        // реальные текущие размеры imageView (учитывают zoomScale)
         let imageWidth = imageView.frame.width
         let imageHeight = imageView.frame.height
         
-        // Если ширина картинки меньше экрана, считаем отступ или 0
         let xOffset = imageWidth < visibleRectSize.width ? (visibleRectSize.width - imageWidth) / 2 : 0
         
-        // Если высота картинки меньше экрана, считаем отступ или 0
         let yOffset = imageHeight < visibleRectSize.height ? (visibleRectSize.height - imageHeight) / 2 : 0
         
-        // внутренние отступы для скроллвью
         scrollView.contentInset = UIEdgeInsets(top: yOffset, left: xOffset, bottom: yOffset, right: xOffset)
     }
-    
 }
-
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {

@@ -7,16 +7,16 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray6
+        view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
     }
     
     let userPhoto: UIImageView = {
         let photo = UIImageView()
-        photo.image = UIImage(named: "Photo")
+        photo.image = UIImage(resource: .photo)
         photo.translatesAutoresizingMaskIntoConstraints = false
         return photo
     }()
@@ -52,37 +52,30 @@ class ProfileViewController: UIViewController {
         return descriptionLabel
     }()
     
-    
-    
     func setupUI() {
-        view.backgroundColor = .black
-        
         let photosStackView = UIStackView(arrangedSubviews: [userPhoto, exitIcon])
         photosStackView.translatesAutoresizingMaskIntoConstraints = false
         photosStackView.axis = .horizontal
         photosStackView.distribution = .equalSpacing
         photosStackView.alignment = .center
-        
-        
+                
         let verticalStackView = UIStackView(arrangedSubviews: [nameLabel, loginLabel, descriptionLabel])
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 8
         verticalStackView.distribution = .fill
         verticalStackView.alignment = .leading
-        
-        
-        userPhoto.setContentHuggingPriority(.defaultHigh, for: .horizontal) // Если поставить абсолютно всем параметрам (и на сжатие, и на растяжение) приоритет 1000, у системы случится внутренний конфликт. Ей ведь нужно как-то растянуть стек на всю ширину экрана между отступами 16 и -16. Ей придется за счет чего-то распределить это пустое пространство. Выставляя .defaultHigh (750) на растяжение, говоришь системе, что не хочешь, чтобы картинка растягивалась. Но если стек раздвигается по краям экрана, просишь увеличить саму картинку, а лучше увеличь расстояние между элементами.
-        userPhoto.setContentCompressionResistancePriority(.required, for: .horizontal) // required — максимальный приоритет в iOS (ровно 1000)
+                
+        userPhoto.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        userPhoto.setContentCompressionResistancePriority(.required, for: .horizontal)
         exitIcon.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         exitIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         [photosStackView, verticalStackView].forEach {
             view.addSubview($0)
-        }// добавляем на вью пачкой
+        }
         
         NSLayoutConstraint.activate([
-            
             photosStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 76),
             photosStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             photosStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -90,8 +83,6 @@ class ProfileViewController: UIViewController {
             verticalStackView.topAnchor.constraint(equalTo: photosStackView.bottomAnchor, constant: 8),
             verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
-            
         ])
-        
     }
 }
