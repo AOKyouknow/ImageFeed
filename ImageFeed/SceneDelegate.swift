@@ -25,7 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
        
         tabBarController.tabBar.standardAppearance = appearance
         tabBarController.tabBar.scrollEdgeAppearance = appearance
-                
+        
         
         let imageListVC = ImagesListViewController()
         
@@ -35,8 +35,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let profileVC = ProfileViewController()
         profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 1)
         
-        tabBarController.viewControllers = [imageListVC, profileVC]
+        let authViewController = AuthViewController()
+        authViewController.tabBarItem = UITabBarItem(title: nil, image: nil, tag: 2)
+        let authViewNavigationController = UINavigationController(rootViewController: authViewController)
+        
+        
+        tabBarController.viewControllers = [imageListVC, profileVC, authViewNavigationController]
        
+        
         
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = tabBarController
