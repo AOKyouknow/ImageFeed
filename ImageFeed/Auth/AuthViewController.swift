@@ -9,6 +9,8 @@ import UIKit
 
 final class AuthViewController: UIViewController {
     
+    private let oauth2Service = OAuth2Service.shared
+    
     let logoOfUnsplash: UIImageView = {
         let logoOfUnsplash = UIImageView()
         logoOfUnsplash.image = UIImage(resource: .logoOfUnsplash)

@@ -19,6 +19,8 @@
 		00B9729830346E75006516A8 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 00B9729730346E75006516A8 /* SF-Pro-Text-Bold.otf */; };
 		00B9729B30361668006516A8 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B9729A30361668006516A8 /* WebViewViewController.swift */; };
 		00B9729D3039B064006516A8 /* WebViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B9729C3039B064006516A8 /* WebViewControllerDelegate.swift */; };
+		00BDED07303C406D00BDD9B4 /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BDED06303C406D00BDD9B4 /* OAuth2Service.swift */; };
+		00BDED0C303F1B8D00BDD9B4 /* NetworkClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BDED0B303F1B8D00BDD9B4 /* NetworkClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +38,8 @@
 		00B9729730346E75006516A8 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
 		00B9729A30361668006516A8 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		00B9729C3039B064006516A8 /* WebViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewControllerDelegate.swift; sourceTree = "<group>"; };
+		00BDED06303C406D00BDD9B4 /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
+		00BDED0B303F1B8D00BDD9B4 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,8 @@
 				00B9729230339152006516A8 /* AuthViewController.swift */,
 				00B9729A30361668006516A8 /* WebViewViewController.swift */,
 				00B9729C3039B064006516A8 /* WebViewControllerDelegate.swift */,
+				00BDED06303C406D00BDD9B4 /* OAuth2Service.swift */,
+				00BDED0B303F1B8D00BDD9B4 /* NetworkClient.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -175,12 +181,14 @@
 				00013E3C301A9A9A00F37A37 /* ImagesListCell.swift in Sources */,
 				00B9729D3039B064006516A8 /* WebViewControllerDelegate.swift in Sources */,
 				00013E3F301E859500F37A37 /* ProfileViewController.swift in Sources */,
+				00BDED07303C406D00BDD9B4 /* OAuth2Service.swift in Sources */,
 				00013E0830160E7A00F37A37 /* AppDelegate.swift in Sources */,
 				00B9729330339152006516A8 /* AuthViewController.swift in Sources */,
 				00B9729030306CB2006516A8 /* Constants.swift in Sources */,
 				001825773023AB2E00C2712B /* SingleImageViewController.swift in Sources */,
 				00B9729B30361668006516A8 /* WebViewViewController.swift in Sources */,
 				00013E0A30160E7A00F37A37 /* SceneDelegate.swift in Sources */,
+				00BDED0C303F1B8D00BDD9B4 /* NetworkClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
