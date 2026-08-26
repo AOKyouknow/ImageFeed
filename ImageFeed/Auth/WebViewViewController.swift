@@ -8,18 +8,22 @@
 import UIKit
 import WebKit
 
+enum WebViewConstants {
+    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+}
+
 final class WebViewViewController: UIViewController {
     
-    weak var delegate: WebViewControllerDelegate?
+    weak var delegate: WebViewViewControllerDelegate?
     
-    lazy var wkWebView = {
+    private lazy var wkWebView = {
         let webView = WKWebView()
         webView.backgroundColor = .white
         webView.translatesAutoresizingMaskIntoConstraints = false
         return webView
     }()
     
-    lazy var progressView = {
+    private lazy var progressView = {
         let progressView = UIProgressView()
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.progressTintColor = .launchScreen
@@ -71,6 +75,7 @@ final class WebViewViewController: UIViewController {
     
     private func setupUI() {
         view.addSubview(wkWebView)
+        view.addSubview(progressView)
         
         NSLayoutConstraint.activate([
             
@@ -103,30 +108,25 @@ final class WebViewViewController: UIViewController {
         }
         let request = URLRequest(url: url)
         wkWebView.load(request)
+        
+        updateProgress()
     }
     
     
     
 }
 
-enum WebViewConstants {
-    
-    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-    
-}
-
-
 extension WebViewViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        print("DEBUG URL: \(navigationAction.request.url?.absoluteString ?? "nil")")
         if let code = code(from: navigationAction) {
-            //TODO: process code
+            delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {
             decisionHandler(.allow)
         }
     }
     
-    //очень больно
     private func code(from navigationAction: WKNavigationAction) -> String? {
         if
             let url = navigationAction.request.url,
@@ -140,7 +140,6 @@ extension WebViewViewController: WKNavigationDelegate {
             return nil
         }
     }
-    
     
     
 }

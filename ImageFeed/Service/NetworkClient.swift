@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkError: Error {
+enum NetworkErrorForClient: Error {
     case codeError
 }
 
@@ -17,18 +17,20 @@ class NetworkClient {
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 handler(.failure(error))
+                return
             }
             
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
-                handler(.failure(NetworkError.codeError))
+                handler(.failure(NetworkErrorForClient.codeError))
+                return
             }
             
             guard let data = data else { return }
             handler(.success(data))
         }
         
-        
+        task.resume()//
     }
     
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol WebViewControllerDelegate: AnyObject {
+protocol WebViewViewControllerDelegate: AnyObject {
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)// получил код
     

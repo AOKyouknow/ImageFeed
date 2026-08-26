@@ -7,18 +7,26 @@
 
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController {
+    
+    weak var delegate: AuthViewControllerDelegate?
     
     private let oauth2Service = OAuth2Service.shared
     
-    let logoOfUnsplash: UIImageView = {
+    private let webViewViewController = WebViewViewController()
+    
+    private let logoOfUnsplash: UIImageView = {
         let logoOfUnsplash = UIImageView()
         logoOfUnsplash.image = UIImage(resource: .logoOfUnsplash)
         logoOfUnsplash.translatesAutoresizingMaskIntoConstraints = false
         return logoOfUnsplash
     }()
     
-    lazy var loginButton: UIButton = {
+   private lazy var loginButton: UIButton = {
         let loginButton = UIButton(type: .system)
         loginButton.setTitle("Войти", for: .normal)
         loginButton.titleLabel?.font = UIFont(name: "SFProText-Bold", size: 17)
@@ -29,14 +37,14 @@ final class AuthViewController: UIViewController {
         loginButton.layer.cornerRadius = 16
         
         let buttonAction = UIAction { [weak self] _ in
-            self?.navigationController?.pushViewController(WebViewViewController(), animated: true)
+            guard let self = self else { return }
+            self.navigationController?.pushViewController(self.webViewViewController, animated: true)
         }
         loginButton.addAction(buttonAction, for: .touchUpInside)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
         return loginButton
     }()
     
-    let webViewViewController = WebViewViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +53,7 @@ final class AuthViewController: UIViewController {
         webViewViewController.delegate = self
     }
     
-    func setupUI() {
+    private func setupUI() {
         view.addSubview(logoOfUnsplash)
         view.addSubview(loginButton)
         
@@ -72,16 +80,29 @@ final class AuthViewController: UIViewController {
     
 }
 
-extension AuthViewController: WebViewControllerDelegate {
+extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        //TODO
+        
+        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let token):
+                    print("got token")
+                    
+                    self.navigationController?.popViewController(animated: true)// убрать браузер
+                    self.delegate?.didAuthenticate(self)
+                    
+                case .failure(let error):
+                    print("\(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        vc.dismiss(animated: true, completion: nil)
+        navigationController?.popViewController(animated: true)
     }
-    
-    
     
     
 }
