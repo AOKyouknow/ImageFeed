@@ -21,4 +21,7 @@ enum Constants {
     
     static let tokenKey = "tokenKey"
     
+    static let httpResponseMinCode = 200
+    
+    static let httpResponseMaxCode = 300
 }

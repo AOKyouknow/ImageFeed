@@ -12,11 +12,8 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
-    
     weak var delegate: AuthViewControllerDelegate?
-    
     private let oauth2Service = OAuth2Service.shared
-    
     private let webViewViewController = WebViewViewController()
     
     private let logoOfUnsplash: UIImageView = {
@@ -37,7 +34,7 @@ final class AuthViewController: UIViewController {
         loginButton.layer.cornerRadius = 16
         
         let buttonAction = UIAction { [weak self] _ in
-            guard let self = self else { return }
+            guard let self else { return }
             self.navigationController?.pushViewController(self.webViewViewController, animated: true)
         }
         loginButton.addAction(buttonAction, for: .touchUpInside)
@@ -90,7 +87,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 case .success(let token):
                     print("got token")
                     
-                    self.navigationController?.popViewController(animated: true)// убрать браузер
+                    self.navigationController?.popViewController(animated: true)
                     self.delegate?.didAuthenticate(self)
                     
                 case .failure(let error):

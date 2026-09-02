@@ -14,40 +14,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-            // Проверяем, что сцена является окном
-            guard let windowScene = (scene as? UIWindowScene) else { return }
+        // Проверяем, что сцена является окном
+        guard let windowScene = (scene as? UIWindowScene) else { return }
             
-//        let tabBarController = UITabBarController()
-//        let appearance = UITabBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .launchScreen
-//        appearance.stackedLayoutAppearance.selected.iconColor = .ypWhite
-//       
-//        tabBarController.tabBar.standardAppearance = appearance
-//        tabBarController.tabBar.scrollEdgeAppearance = appearance
-//        
-//        
-//        let imageListVC = ImagesListViewController()
-//        
-//        
-//        imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 0)
-//
-//        let profileVC = ProfileViewController()
-//        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 1)
-//        
-////        let authViewController = AuthViewController()
-////        authViewController.tabBarItem = UITabBarItem(title: nil, image: nil, tag: 2)
-////        let authViewNavigationController = UINavigationController(rootViewController: authViewController)
-//        
-//        
-//        tabBarController.viewControllers = [imageListVC, profileVC]
-//       
-//        
-//        
-//        let window = UIWindow(windowScene: windowScene)
-//        window.rootViewController = tabBarController
-//        self.window = window
-//        window.makeKeyAndVisible()
         let splashViewController = SplashViewController()
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = splashViewController
