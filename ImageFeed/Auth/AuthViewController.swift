@@ -14,7 +14,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
-    private let oauth2Service = OAuth2Service.shared
+    private let oauth2Service = OAuth2Service()
     private let webViewViewController = WebViewViewController()
     
     private let logoOfUnsplash: UIImageView = {
@@ -84,7 +84,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         vc.navigationController?.popViewController(animated: true)//при выщове у меня пуш!!!!!!!
         ProgressHUD.animate()
         
-        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
+        oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
