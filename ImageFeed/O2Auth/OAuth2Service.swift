@@ -31,9 +31,10 @@ final class OAuth2Service {
         
         let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             DispatchQueue.main.async {
-                
+                //TODO: рефактор через helper в extension (исп. URLSession+data)
                 if let error {
                     completion(.failure(error))
+                    return
                 }
                 
                 guard let httpResponse =
@@ -59,7 +60,7 @@ final class OAuth2Service {
                 }
                 
                 self?.task = nil
-                self?.lastCode = nil                
+                self?.lastCode = nil
             }
         }
         self.task = task

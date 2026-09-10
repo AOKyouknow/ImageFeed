@@ -63,7 +63,6 @@ final class AuthViewController: UIViewController {
         loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90).isActive = true
         loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        
     }
     
     private func configureBackButton() {
@@ -72,8 +71,6 @@ final class AuthViewController: UIViewController {
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
-        
-        
     }
     
 }
@@ -82,13 +79,13 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
         vc.navigationController?.popViewController(animated: true)//при выщове у меня пуш!!!!!!!
-        ProgressHUD.animate()
+        UIBlockingProgressHUD.show()
         
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
-                ProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
                 switch result {
                 case .success(let token):
                     print("got token: \(token)")
