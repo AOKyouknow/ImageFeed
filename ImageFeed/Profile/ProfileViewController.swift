@@ -8,10 +8,24 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
+    
+    let profileService = ProfileService()
+    let token = OAuth2TokenStorage().token
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
+        guard let token else { return }
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let profile):
+                self.updateUI(with: profile)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
     
     let userPhoto: UIImageView = {
@@ -28,7 +42,7 @@ final class ProfileViewController: UIViewController {
         return icon
     }()
     
-    let nameLabel: UILabel = {
+    var nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont(name: "SF Pro-Bold", size: 23)
@@ -84,5 +98,17 @@ final class ProfileViewController: UIViewController {
             verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+    }
+    
+    func updateUI(with profile: ProfileService.Profile) {
+        nameLabel.text = profile.name.isEmpty
+        ? "имя не указано"
+        : profile.name
+        loginLabel.text = profile.loginName.isEmpty
+        ? "неизвестный пользователь"
+        : profile.loginName
+        descriptionLabel.text = (profile.bio?.isEmpty ?? true) //
+        ? "Профиль не заполнен"
+        : profile.bio
     }
 }
