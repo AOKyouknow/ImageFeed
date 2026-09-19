@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -17,11 +18,11 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
         guard let currentProfile = profileService.profile else {
-                   print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
-                   return
-               }
+            print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
+            return
+        }
         updateUI(with: currentProfile)
-
+        updateAvatar()
     }
     
     let userPhoto: UIImageView = {
@@ -106,5 +107,14 @@ final class ProfileViewController: UIViewController {
         descriptionLabel.text = (profile.bio?.isEmpty ?? true) //
         ? "Профиль не заполнен"
         : profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        
+        userPhoto.kf.setImage(with: url)
     }
 }
