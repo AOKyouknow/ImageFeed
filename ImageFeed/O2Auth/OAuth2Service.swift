@@ -29,40 +29,22 @@ final class OAuth2Service {
             return
         }
         
-        let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
-            DispatchQueue.main.async {
-                //TODO: рефактор через helper в extension (исп. URLSession+data)
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let httpResponse =
-                        response as? HTTPURLResponse,
-                      (Constants.httpResponseMinCode..<Constants.httpResponseMaxCode).contains(httpResponse.statusCode)
-                else {
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                
-                guard let data else {
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                
-                do {
-                    let response = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    let token = response.accessToken
-                    OAuth2TokenStorage.shared.token = token
-                    completion(.success(token))
-                } catch {
-                    completion(.failure(NetworkError.decodingError(error)))
-                }
-                
-                self?.task = nil
-                self?.lastCode = nil
-            }
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+        guard let self = self else { return }
+        
+        switch result {
+        case .success(let body):
+            let token = body.accessToken
+            OAuth2TokenStorage().token = token
+            completion(.success(token))
+            
+        case .failure(let error):
+            print("Не удалось получить токен: \(error.localizedDescription)")
+            completion(.failure(error))
         }
+        
+        self.task = nil
+    }
         self.task = task
         task.resume()
     }

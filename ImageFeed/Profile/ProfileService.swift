@@ -68,43 +68,26 @@ final class ProfileService {
             return
         }
         
-        let task = URLSession.shared.dataTask(with: request) { [ weak self ] data, response, error in
-            DispatchQueue.main.async {
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let profileResult):
+                let profile = Profile(
+                    username: profileResult.userName,
+                    name: "\(profileResult.firstName) \(profileResult.lastName)",
+                    loginName: "@\(profileResult.userName)",
+                    bio: profileResult.bio
+                )
+                self.profile = profile
+                completion(.success(profile))
                 
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                guard (Constants.httpResponseMinCode..<Constants.httpResponseMaxCode).contains(httpResponse.statusCode)
-                else {
-                    completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
-                    return
-                }
-                
-                guard let data else {
-                    completion(.failure(NetworkError.noData))
-                    return
-                }
-                
-                do {
-                    let response = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    let profileResult = Profile(
-                        username: response.userName,
-                        name: "\(response.firstName) \(response.lastName)",
-                        loginName: "@\(response.userName)",
-                        bio: response.bio)
-                    self?.profile = profileResult
-                    completion(.success(profileResult))
-                } catch {
-                    completion(.failure(error))
-                    return
-                }
-                self?.task = nil// почему здесь обнуляется? потому что ассинхронный код.
+            case .failure(let error):
+                print("Не удалось загрузить данные профиля: \(error.localizedDescription)")
+                completion(.failure(error))
             }
+            
+            self.task = nil
         }
         self.task = task
         task.resume()

@@ -13,7 +13,7 @@ enum WebViewConstants {
 }
 
 final class WebViewViewController: UIViewController {
-    
+    private var estimatedProgressObservation: NSKeyValueObservation?
     weak var delegate: WebViewViewControllerDelegate?
     
     private lazy var wkWebView = {
@@ -38,23 +38,30 @@ final class WebViewViewController: UIViewController {
         loadAuthView()
         wkWebView.navigationDelegate = self
         
-        
+        estimatedProgressObservation = wkWebView.observe(
+                    \.estimatedProgress,
+                    options: [.new],
+                    changeHandler: { [weak self] _, _ in
+                        guard let self = self else { return }
+                        self.updateProgress()
+                    }
+                )
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        wkWebView.addObserver(
-                    self,
-                    forKeyPath: #keyPath(WKWebView.estimatedProgress),
-                    options: .new,
-                    context: nil)
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        wkWebView.addObserver(
+//                    self,
+//                    forKeyPath: #keyPath(WKWebView.estimatedProgress),
+//                    options: .new,
+//                    context: nil)
+//    }
    
-    override func viewDidDisappear(_ animated: Bool) {
-        wkWebView.removeObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            context: nil)
-    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        wkWebView.removeObserver(
+//            self,
+//            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+//            context: nil)
+//    }
     
     override func observeValue(
         forKeyPath keyPath: String?,

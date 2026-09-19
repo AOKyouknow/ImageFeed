@@ -56,43 +56,22 @@ final class ProfileImageService {
             return
         }
             
-        let task = URLSession.shared.dataTask(with: request) { [ weak self ] data, response, error in
-            DispatchQueue.main.async {
-                if let error {
-                    completion(.failure(error))
-                    return
-                }
+        let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let userResult):
+                let avatarStringURL = userResult.profileImage.small
                 
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    completion(.failure(NetworkError.urlSessionError))
-                    return
-                }
-                guard (Constants.httpResponseMinCode..<Constants.httpResponseMaxCode).contains(httpResponse.statusCode)
-                else {
-                    completion(.failure(NetworkError.httpStatusCode(httpResponse.statusCode)))
-                    return
-                }
+                self.avatarURL = avatarStringURL
+                completion(.success(avatarStringURL))
                 
-                guard let data else {
-                    completion(.failure(NetworkError.noData))
-                    return
-                }
-                
-                do {
-                    let response = try JSONDecoder().decode(UserResult.self, from: data)
-                    self?.avatarURL = response.profileImage.small
-                    completion(.success(response.profileImage.small))
-                    NotificationCenter.default                                     // 1
-                        .post(                                                     // 2
-                            name: ProfileImageService.didChangeNotification,       // 3
-                            object: self,                                          // 4
-                            userInfo: ["URL": response.profileImage.small])                    // 5
-
-                } catch {
-                    completion(.failure(error))
-                }
-                self?.task = nil// почему здесь обнуляется? потому что ассинхронный код.
+            case .failure(let error):
+                print("Не удалось загрузить ссылку на аватарку для пользователя \(username): \(error.localizedDescription)")
+                completion(.failure(error))
             }
+            
+            self.task = nil
         }
         
         self.task = task
