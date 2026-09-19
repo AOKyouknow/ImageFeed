@@ -46,7 +46,7 @@ final class ProfileService {
         
         guard let token
         else {
-            print("token is nil")
+            print("[ProfileService/fetchProfile]: token is nil")
             return nil
         }
          
@@ -64,7 +64,8 @@ final class ProfileService {
         task?.cancel()
         
         guard let request = makeProfileRequest(token: token) else {
-            completion(.failure(NetworkError.invalidRequest)) // разобраться с ошибкой
+            print("[ProfileService/fetchProfile]: invalidRequest - токен: \(token)")
+            completion(.failure(NetworkError.invalidRequest))
             return
         }
         
@@ -83,7 +84,7 @@ final class ProfileService {
                 completion(.success(profile))
                 
             case .failure(let error):
-                print("Не удалось загрузить данные профиля: \(error.localizedDescription)")
+                print("[ProfileService/fetchProfile]: \(error)")
                 completion(.failure(error))
             }
             

@@ -32,14 +32,14 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulfillCompletionOnTheMainThread(.success(data))
                 } else {
-                    print("Неверный HTTP статус-код \(statusCode) для URL: \(request)")
+                    print("[dataTask]: NetworkError - код ошибки \(statusCode), URL: \(request.url?.absoluteString ?? "nil")")
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
-                print("Ошибка запроса: \(error.localizedDescription) для URL: \(request)")
+                print("[dataTask]: urlRequestError - \(error.localizedDescription), URL: \(request.url?.absoluteString ?? "nil")")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
-                print("Неизвестная ошибка сессии для URL: \(request)")
+                print("[dataTask]: urlSessionError - неизвестная ошибка сессии, URL: \(request.url?.absoluteString ?? "nil")")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })
@@ -62,7 +62,7 @@ extension URLSession {
                         completion(.success(decodedObject))
                     } catch {
                         let rawJsonString = String(data: data, encoding: .utf8) ?? "Не удалось преобразовать Data в UTF-8 String"
-                                           print("Ошибка декодирования: \(error.localizedDescription), Данные: \(rawJsonString)")
+                        print("[objectTask]: decodingError - \(error.localizedDescription), данные: \(rawJsonString)")
                         completion(.failure(error))
                     }
                     

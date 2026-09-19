@@ -17,6 +17,14 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
+        NotificationCenter.default.addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.updateAvatar()
+            }
+
         guard let currentProfile = profileService.profile else {
             print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
             return
@@ -42,7 +50,7 @@ final class ProfileViewController: UIViewController {
     var nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
-        nameLabel.font = UIFont(name: "SF Pro-Bold", size: 23)
+        nameLabel.font = UIFont(name: "SFProText-Bold", size: 23)
         nameLabel.textColor = UIColor(named: "YP White")
         return nameLabel
     }()

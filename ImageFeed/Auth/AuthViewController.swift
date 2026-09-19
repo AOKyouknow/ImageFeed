@@ -107,7 +107,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     self.delegate?.didAuthenticate(self)
                     
                 case .failure(let error):
-                    print("\(error.localizedDescription)")
+                    print("[AuthViewController/webViewViewController]: \(error)")
                     self.showErrorAlert()
                 }
             }

@@ -18,7 +18,6 @@ final class SplashViewController: UIViewController {
         if storage.token != nil {
             guard let token = storage.token else { return }
             fetchProfile(token: token)
-            switchToTabBarController()
         } else {
             let authViewController = AuthViewController()
             authViewController.delegate = self
@@ -35,28 +34,8 @@ final class SplashViewController: UIViewController {
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .first { $0.isKeyWindow }
-                
-        let tabBarController = UITabBarController()
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .launchScreen
-        appearance.stackedLayoutAppearance.selected.iconColor = .ypWhite
        
-        tabBarController.tabBar.standardAppearance = appearance
-        tabBarController.tabBar.scrollEdgeAppearance = appearance
-        
-        
-        let imageListVC = ImagesListViewController()
-                
-        imageListVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar2"), tag: 0)
-
-        let profileVC = ProfileViewController()
-        profileVC.tabBarItem = UITabBarItem(title: nil, image: UIImage(named: "tabBar1"), tag: 1)
-
-        
-        tabBarController.viewControllers = [imageListVC, profileVC]
-       
-        window?.rootViewController = tabBarController
+        window?.rootViewController = TabBarController()
         
         window?.makeKeyAndVisible()
     }
@@ -65,20 +44,17 @@ final class SplashViewController: UIViewController {
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
-        vc.dismiss(animated: true) { [weak self] in
-            self?.switchToTabBarController()
-        }
-        guard let token = storage.token else { return } //
-        fetchProfile(token: token)
+        vc.dismiss(animated: true)
     }
     
     private func fetchProfile(token: String) {
-            UIBlockingProgressHUD.show()
-            profileService.fetchProfile(token) { [weak self] result in
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile(token) { [weak self] result in
+            DispatchQueue.main.async {
                 UIBlockingProgressHUD.dismiss()
-
+                
                 guard let self = self else { return }
-
+                
                 switch result {
                 case .success(let profile):
                     
@@ -86,13 +62,14 @@ extension SplashViewController: AuthViewControllerDelegate {
                     ProfileImageService.shared.fetchProfileImageURL(username: username) { _ in
                     }
                     
-                   self.switchToTabBarController()
-
+                    self.switchToTabBarController()
+                    
                 case .failure(let error):
                     self.showProfileError(error)
                 }
             }
         }
+    }
     
     private func showProfileError(_ error: Error) {
         let alert = UIAlertController(

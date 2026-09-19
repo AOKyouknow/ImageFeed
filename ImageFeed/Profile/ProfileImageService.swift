@@ -36,7 +36,7 @@ final class ProfileImageService {
         
         guard let token
         else {
-            print("token is nil")
+            print("[ProfileImageService/fetchProfileImageURL]: token is nil")
             return nil
         }
          
@@ -52,6 +52,7 @@ final class ProfileImageService {
         task?.cancel()
         
         guard let request = makeProfileImageRequest(username: username) else {
+            print("[ProfileImageService/fetchProfileImageURL]: invalidRequest - username: \(username)")
             completion(.failure(NetworkError.invalidRequest))
             return
         }
@@ -65,9 +66,13 @@ final class ProfileImageService {
                 
                 self.avatarURL = avatarStringURL
                 completion(.success(avatarStringURL))
-                
+                NotificationCenter.default.post(
+                        name: ProfileImageService.didChangeNotification,
+                        object: self,
+                        userInfo: ["URL": avatarStringURL]
+                    )
             case .failure(let error):
-                print("Не удалось загрузить ссылку на аватарку для пользователя \(username): \(error.localizedDescription)")
+                print("[ProfileImageService/fetchProfileImageURL]: \(error) - username: \(username)")
                 completion(.failure(error))
             }
             
