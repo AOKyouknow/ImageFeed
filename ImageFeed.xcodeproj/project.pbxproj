@@ -28,6 +28,7 @@
 		00BDED1830496D3B00BDD9B4 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 00BDED1730496D3B00BDD9B4 /* ProgressHUD */; };
 		00BDED1F3052927C00BDD9B4 /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BDED1E3052927C00BDD9B4 /* UIBlockingProgressHUD.swift */; };
 		00BDED2130595A6400BDD9B4 /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BDED2030595A6400BDD9B4 /* ProfileService.swift */; };
+		00BDED23305DCAC400BDD9B4 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BDED22305DCAC400BDD9B4 /* ProfileImageService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		00BDED13303F35AA00BDD9B4 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		00BDED1E3052927C00BDD9B4 /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		00BDED2030595A6400BDD9B4 /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		00BDED22305DCAC400BDD9B4 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +157,7 @@
 			children = (
 				00013E3E301E859500F37A37 /* ProfileViewController.swift */,
 				00BDED2030595A6400BDD9B4 /* ProfileService.swift */,
+				00BDED22305DCAC400BDD9B4 /* ProfileImageService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				00B9729030306CB2006516A8 /* Constants.swift in Sources */,
 				001825773023AB2E00C2712B /* SingleImageViewController.swift in Sources */,
 				00BDED10303F272000BDD9B4 /* OAuthTokenResponseBody.swift in Sources */,
+				00BDED23305DCAC400BDD9B4 /* ProfileImageService.swift in Sources */,
 				00BDED2130595A6400BDD9B4 /* ProfileService.swift in Sources */,
 				00B9729B30361668006516A8 /* WebViewViewController.swift in Sources */,
 				00BDED12303F27B300BDD9B4 /* OAuth2TokenStorage.swift in Sources */,

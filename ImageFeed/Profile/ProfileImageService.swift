@@ -1,44 +1,34 @@
 //
-//  ProfileService.swift
+//  ProfileImageService.swift
 //  ImageFeed
 //
-//  Created by Алик on 15.09.2026.
+//  Created by Алик on 18.09.2026.
 //
 
 import Foundation
 
-final class ProfileService {
-    private(set) var profile: Profile?
-    static let shared = ProfileService()
-    private init () {}
-    
+final class ProfileImageService {
+    private (set) var avatarURL: String?
+    static let shared = ProfileImageService()
+    private init() {}
+    private var task: URLSessionTask?
     let token = OAuth2TokenStorage().token
-    var task: URLSessionTask?
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
-    struct ProfileResult: Codable {
-        let userName: String
-        let firstName: String
-        let lastName: String
-        let bio: String?
+    struct UserResult: Codable {
+        let profileImage: ProfileImage
         enum CodingKeys: String, CodingKey {
-                case userName = "username"
-                case firstName = "first_name"
-                case lastName = "last_name"
-                case bio
-            }
+            case profileImage = "profile_image"
+        }
     }
     
-    struct Profile {
-        let username: String
-        var name: String
-        var loginName: String
-        let bio: String?
+    struct ProfileImage: Codable {
+        let small: String
     }
     
-    
-    final func makeProfileRequest(token: String?) -> URLRequest? {
+    final func makeProfileImageRequest(username: String) -> URLRequest? {
         guard
-            let url = URL(string: "https://api.unsplash.com/me")
+            let url = URL(string: "https://api.unsplash.com/users/\(username)")
         else {
             assertionFailure("Failed to create URL")
             return nil
@@ -57,17 +47,15 @@ final class ProfileService {
     }
     
     
-    final func fetchProfile(
-        _ token: String, completion: @escaping (Result<Profile, Error>) -> Void
-    ) {
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         task?.cancel()
         
-        guard let request = makeProfileRequest(token: token) else {
-            completion(.failure(NetworkError.invalidRequest)) // разобраться с ошибкой
+        guard let request = makeProfileImageRequest(username: username) else {
+            completion(.failure(NetworkError.invalidRequest))
             return
         }
-        
+            
         let task = URLSession.shared.dataTask(with: request) { [ weak self ] data, response, error in
             DispatchQueue.main.async {
                 if let error {
@@ -91,25 +79,29 @@ final class ProfileService {
                 }
                 
                 do {
-                    let response = try JSONDecoder().decode(ProfileResult.self, from: data)
-                    let profileResult = Profile(
-                        username: response.userName,
-                        name: "\(response.firstName) \(response.lastName)",
-                        loginName: "@\(response.userName)",
-                        bio: response.bio)
-                    self?.profile = profileResult
-                    completion(.success(profileResult))
+                    let response = try JSONDecoder().decode(UserResult.self, from: data)
+                    self?.avatarURL = response.profileImage.small
+                    completion(.success(response.profileImage.small))
+                    NotificationCenter.default                                     // 1
+                        .post(                                                     // 2
+                            name: ProfileImageService.didChangeNotification,       // 3
+                            object: self,                                          // 4
+                            userInfo: ["URL": response.profileImage.small])                    // 5
+
                 } catch {
                     completion(.failure(error))
-                    return
                 }
                 self?.task = nil// почему здесь обнуляется? потому что ассинхронный код.
             }
         }
+        
         self.task = task
         task.resume()
     }
-    
+        
+        
+        
+      
     
     
 }//

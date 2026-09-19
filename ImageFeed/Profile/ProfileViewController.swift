@@ -9,23 +9,19 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
-    let profileService = ProfileService()
+    let profileService = ProfileService.shared
     let token = OAuth2TokenStorage().token
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
-        guard let token else { return }
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self else { return }
-            switch result {
-            case .success(let profile):
-                self.updateUI(with: profile)
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
+        guard let currentProfile = profileService.profile else {
+                   print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
+                   return
+               }
+        updateUI(with: currentProfile)
+
     }
     
     let userPhoto: UIImageView = {
