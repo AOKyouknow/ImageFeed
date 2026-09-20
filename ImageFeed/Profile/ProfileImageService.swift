@@ -34,7 +34,7 @@ final class ProfileImageService {
             return nil
         }
         
-        guard let token
+        guard let token = OAuth2TokenStorage().token
         else {
             print("[ProfileImageService/fetchProfileImageURL]: token is nil")
             return nil
@@ -82,10 +82,4 @@ final class ProfileImageService {
         self.task = task
         task.resume()
     }
-        
-        
-        
-      
-    
-    
-}//
+}

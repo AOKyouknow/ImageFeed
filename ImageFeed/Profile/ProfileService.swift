@@ -17,15 +17,15 @@ final class ProfileService {
     
     struct ProfileResult: Codable {
         let userName: String
-        let firstName: String
-        let lastName: String
+        let firstName: String?
+        let lastName: String?
         let bio: String?
         enum CodingKeys: String, CodingKey {
-                case userName = "username"
-                case firstName = "first_name"
-                case lastName = "last_name"
-                case bio
-            }
+            case userName = "username"
+            case firstName = "first_name"
+            case lastName = "last_name"
+            case bio
+        }
     }
     
     struct Profile {
@@ -49,7 +49,7 @@ final class ProfileService {
             print("[ProfileService/fetchProfile]: token is nil")
             return nil
         }
-         
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -74,9 +74,12 @@ final class ProfileService {
             
             switch result {
             case .success(let profileResult):
+                let nameComponents = [profileResult.firstName, profileResult.lastName].compactMap { $0 }
+                let formattedName = nameComponents.isEmpty ? profileResult.userName : nameComponents.joined(separator: " ")
+                
                 let profile = Profile(
                     username: profileResult.userName,
-                    name: "\(profileResult.firstName) \(profileResult.lastName)",
+                    name: formattedName,
                     loginName: "@\(profileResult.userName)",
                     bio: profileResult.bio
                 )
@@ -94,6 +97,4 @@ final class ProfileService {
         task.resume()
     }
     
-    
-    
-}//
+}

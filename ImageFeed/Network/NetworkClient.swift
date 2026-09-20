@@ -26,7 +26,10 @@ class NetworkClient {
                 return
             }
             
-            guard let data = data else { return }
+            guard let data = data else {
+                handler(.failure(NetworkError.noData))
+                return
+            }
             handler(.success(data))
         }
         

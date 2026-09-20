@@ -30,7 +30,7 @@ final class OAuth2Service {
         }
         
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
-        guard let self = self else { return }
+            guard let self, self.lastCode == code else { return }
         
         switch result {
         case .success(let body):

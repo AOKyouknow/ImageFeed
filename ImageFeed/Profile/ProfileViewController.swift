@@ -11,8 +11,7 @@ import Kingfisher
 final class ProfileViewController: UIViewController {
     
     let profileService = ProfileService.shared
-    let token = OAuth2TokenStorage().token
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)

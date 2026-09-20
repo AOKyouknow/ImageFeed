@@ -24,7 +24,7 @@ final class AuthViewController: UIViewController {
         return logoOfUnsplash
     }()
     
-   private lazy var loginButton: UIButton = {
+    private lazy var loginButton: UIButton = {
         let loginButton = UIButton(type: .system)
         loginButton.setTitle("Войти", for: .normal)
         loginButton.titleLabel?.font = UIFont(name: "SFProText-Bold", size: 17)
@@ -95,21 +95,18 @@ extension AuthViewController: WebViewViewControllerDelegate {
         UIBlockingProgressHUD.show()
         
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
             
-            DispatchQueue.main.async {
-                UIBlockingProgressHUD.dismiss()
-                switch result {
-                case .success(let token):
-                    print("got token: \(token)")
-                    
-                    
-                    self.delegate?.didAuthenticate(self)
-                    
-                case .failure(let error):
-                    print("[AuthViewController/webViewViewController]: \(error)")
-                    self.showErrorAlert()
-                }
+            switch result {
+            case .success(let token):
+                print("got token: \(token)")
+                
+                self.delegate?.didAuthenticate(self)
+                
+            case .failure(let error):
+                print("[AuthViewController/webViewViewController]: \(error)")
+                self.showErrorAlert()
             }
         }
     }
