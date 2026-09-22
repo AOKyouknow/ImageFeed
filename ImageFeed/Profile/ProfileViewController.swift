@@ -6,12 +6,30 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    
+    let profileService = ProfileService.shared
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
+        NotificationCenter.default.addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.updateAvatar()
+            }
+
+        guard let currentProfile = profileService.profile else {
+            print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
+            return
+        }
+        updateUI(with: currentProfile)
+        updateAvatar()
     }
     
     let userPhoto: UIImageView = {
@@ -28,10 +46,10 @@ final class ProfileViewController: UIViewController {
         return icon
     }()
     
-    let nameLabel: UILabel = {
+    var nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
-        nameLabel.font = UIFont(name: "SF Pro-Bold", size: 23)
+        nameLabel.font = UIFont(name: "SFProText-Bold", size: 23)
         nameLabel.textColor = UIColor(named: "YP White")
         return nameLabel
     }()
@@ -84,5 +102,26 @@ final class ProfileViewController: UIViewController {
             verticalStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             verticalStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
+    }
+    
+    func updateUI(with profile: ProfileService.Profile) {
+        nameLabel.text = profile.name.isEmpty
+        ? "имя не указано"
+        : profile.name
+        loginLabel.text = profile.loginName.isEmpty
+        ? "неизвестный пользователь"
+        : profile.loginName
+        descriptionLabel.text = (profile.bio?.isEmpty ?? true) //
+        ? "Профиль не заполнен"
+        : profile.bio
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        
+        userPhoto.kf.setImage(with: url)
     }
 }

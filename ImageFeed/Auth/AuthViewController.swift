@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -13,7 +14,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
-    private let oauth2Service = OAuth2Service.shared
+    private let oauth2Service = OAuth2Service()
     private let webViewViewController = WebViewViewController()
     
     private let logoOfUnsplash: UIImageView = {
@@ -23,7 +24,7 @@ final class AuthViewController: UIViewController {
         return logoOfUnsplash
     }()
     
-   private lazy var loginButton: UIButton = {
+    private lazy var loginButton: UIButton = {
         let loginButton = UIButton(type: .system)
         loginButton.setTitle("Войти", for: .normal)
         loginButton.titleLabel?.font = UIFont(name: "SFProText-Bold", size: 17)
@@ -62,7 +63,6 @@ final class AuthViewController: UIViewController {
         loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90).isActive = true
         loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        
     }
     
     private func configureBackButton() {
@@ -71,8 +71,19 @@ final class AuthViewController: UIViewController {
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor(resource: .ypBlack)
+    }
+    
+    private func showErrorAlert() {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
         
+        let action = UIAlertAction(title: "Ок", style: .default, handler: nil)
+        alert.addAction(action)
         
+        present(alert, animated: true, completion: nil)
     }
     
 }
@@ -80,19 +91,22 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
-        oauth2Service.fetchOAuthToken(code: code) { [weak self] result in
+        vc.navigationController?.popViewController(animated: true)//при выщове у меня пуш!!!!!!!
+        UIBlockingProgressHUD.show()
+        
+        oauth2Service.fetchOAuthToken(code) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let token):
-                    print("got token")
-                    
-                    self.navigationController?.popViewController(animated: true)
-                    self.delegate?.didAuthenticate(self)
-                    
-                case .failure(let error):
-                    print("\(error.localizedDescription)")
-                }
+            
+            switch result {
+            case .success(let token):
+                print("got token: \(token)")
+                
+                self.delegate?.didAuthenticate(self)
+                
+            case .failure(let error):
+                print("[AuthViewController/webViewViewController]: \(error)")
+                self.showErrorAlert()
             }
         }
     }
