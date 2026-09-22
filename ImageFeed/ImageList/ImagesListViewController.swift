@@ -122,5 +122,9 @@ extension ImagesListViewController: UITableViewDataSource {
         return imageListCell
     }
     
-    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //метод вызывается прямо перед тем, как ячейка таблицы будет показана на экране
+        guard indexPath.row + 1 == photos.count else { return }
+        ImageListService().fetchPhotosNextPage()
+    }
 }
