@@ -117,8 +117,8 @@
 			isa = PBXGroup;
 			children = (
 				00013E0B30160E7A00F37A37 /* ImagesListViewController.swift */,
-				00013E3B301A9A9A00F37A37 /* ImagesListCell.swift */,
 				009CC6A93061B367009D5CE0 /* ImageListService.swift */,
+				00013E3B301A9A9A00F37A37 /* ImagesListCell.swift */,
 			);
 			path = ImageList;
 			sourceTree = "<group>";

@@ -6,25 +6,17 @@
 //
 
 import UIKit
+import Kingfisher
 
 class SingleImageViewController: UIViewController {
     
-    var image: UIImage? {
-        didSet {
-            guard isViewLoaded, let image else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
-        }
-    }
+    var photo: Photo?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .launchScreen
-        
-        imageView.image = image
-        guard let image else { return }
         setupUI()
-        rescaleAndCenterImageInScrollView(image: image)
+       loadImage()
     }
     
     private lazy var backButton: UIButton = {
@@ -137,6 +129,21 @@ class SingleImageViewController: UIViewController {
         let yOffset = imageHeight < visibleRectSize.height ? (visibleRectSize.height - imageHeight) / 2 : 0
         
         scrollView.contentInset = UIEdgeInsets(top: yOffset, left: xOffset, bottom: yOffset, right: xOffset)
+    }
+    
+    private func loadImage() {
+        guard let photo, let imageURL = URL(string: photo.largeImageURL) else { return }
+        
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: imageURL, placeholder: UIImage(named: "Stub")) { [ weak self] result in
+            switch result {
+            case .success(let value):
+                let downloadedImage = value.image
+                self?.rescaleAndCenterImageInScrollView(image: downloadedImage)
+            case .failure(let error):
+                print("Ошибка загрузки")
+            }
+        }
     }
 }
 

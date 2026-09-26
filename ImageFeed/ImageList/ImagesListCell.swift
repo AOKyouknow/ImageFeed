@@ -5,8 +5,8 @@
 //  Created by Алик on 29.07.2026.
 //
 
-import Foundation
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
@@ -84,4 +84,10 @@ final class ImagesListCell: UITableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // отменяем операцию Kingfisher при переиспользовании
+        //fullsizeImageView.kf.cancelDownloadTask()
+        cellImageView.kf.cancelDownloadTask()
+    }
 }

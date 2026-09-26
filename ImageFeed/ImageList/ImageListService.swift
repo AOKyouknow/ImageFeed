@@ -7,39 +7,42 @@
 
 import Foundation
 
+struct Photo { // структура для UI части приложения
+    let id: String
+    let size: CGRect
+    let createdAt: Date?
+    let welcomeDescription: String?
+    let thumbImageURL: String
+    let largeImageURL: String
+    let isLiked: Bool
+}
+
+struct PhotosResult: Codable { // структура для декодинга JSON
+    let id: String
+    let width: Int
+    let height: Int
+    let createdAt: Date?
+    let description: String?
+    let urls: UrlsResult
+    let likedByUser: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case id, width, height, description, urls
+        case createdAt = "created_at"
+        case likedByUser = "liked_by_user"
+    }
+    
+    
+}
+struct UrlsResult: Codable {
+    let thumb: String
+    let full: String
+}
+
+
 class ImageListService {
     var task: URLSessionTask?
-    struct Photo { // структура для UI части приложения
-        let id: String
-        let size: CGRect
-        let createdAt: Date?
-        let welcomeDescription: String?
-        let thumbImageURL: String
-        let largeImageURL: String
-        let isLiked: Bool
-    }
     
-    struct PhotosResult: Codable { // структура для декодинга JSON
-    let id: String
-        let width: Int
-        let height: Int
-        let createdAt: Date?
-        let description: String?
-        let urls: UrlsResult
-        let likedByUser: Bool
-        
-        enum CodingKeys: String, CodingKey {
-            case id, width, height, description, urls
-            case createdAt = "created_at"
-            case likedByUser = "liked_by_user"
-        }
-    
-        
-    }
-    struct UrlsResult: Codable {
-        let thumb: String
-        let full: String
-    }
     
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
@@ -82,7 +85,7 @@ class ImageListService {
                     name: ImageListService.didChangeNotification,
                     object: self)
             case .failure(let error):
-                print(error)
+                print("[ImageListService/fetchPhotosNextPage]: \(error)")
             }
             self.task = nil
         }
@@ -90,6 +93,5 @@ class ImageListService {
         task.resume()
         
     }
-    
     
 }
