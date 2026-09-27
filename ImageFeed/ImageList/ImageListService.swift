@@ -42,7 +42,7 @@ struct UrlsResult: Codable {
 
 class ImageListService {
     var task: URLSessionTask?
-    
+    let token = OAuth2TokenStorage().token
     
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
@@ -92,6 +92,46 @@ class ImageListService {
         self.task = task
         task.resume()
         
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
+            assertionFailure("Failed to create URL")
+            return
+        }
+        guard let token else {
+            print("[ImageListService]: token is nil")
+            return
+        }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        switch isLike {
+        case true:
+            request.httpMethod = "POST"
+        case false:
+            request.httpMethod = "DELETE"
+        }
+        
+        let task = URLSession.shared.data(for: request) { result in
+            switch result {
+            case .success: completion(.success(()))
+                if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
+                    let photo = self.photos[index]
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        largeImageURL: photo.largeImageURL,
+                        isLiked: !photo.isLiked)
+                    self.photos[index] = newPhoto
+                }
+            case .failure(let error): completion(.failure(error))
+            }
+        }
+        task.resume()
     }
     
 }
