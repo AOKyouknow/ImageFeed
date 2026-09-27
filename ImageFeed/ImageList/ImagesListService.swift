@@ -40,7 +40,7 @@ struct UrlsResult: Codable {
 }
 
 
-class ImageListService {
+class ImagesListService {
     var task: URLSessionTask?
     let token = OAuth2TokenStorage().token
     
@@ -82,7 +82,7 @@ class ImageListService {
                 self.photos.append(contentsOf: photosResult)
                 self.lastLoadedPage = nextPage
                 NotificationCenter.default.post(
-                    name: ImageListService.didChangeNotification,
+                    name: ImagesListService.didChangeNotification,
                     object: self)
             case .failure(let error):
                 print("[ImageListService/fetchPhotosNextPage]: \(error)")
@@ -115,7 +115,7 @@ class ImageListService {
         
         let task = URLSession.shared.data(for: request) { result in
             switch result {
-            case .success: completion(.success(()))
+            case .success:
                 if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
                     let photo = self.photos[index]
                     let newPhoto = Photo(
@@ -127,8 +127,11 @@ class ImageListService {
                         largeImageURL: photo.largeImageURL,
                         isLiked: !photo.isLiked)
                     self.photos[index] = newPhoto
+                    
+                    completion(.success(()))
                 }
             case .failure(let error): completion(.failure(error))
+                
             }
         }
         task.resume()

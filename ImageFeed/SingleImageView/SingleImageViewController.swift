@@ -141,7 +141,7 @@ class SingleImageViewController: UIViewController {
                 let downloadedImage = value.image
                 self?.rescaleAndCenterImageInScrollView(image: downloadedImage)
             case .failure(let error):
-                print("Ошибка загрузки")
+                print("Ошибка загрузки \(error)")
             }
         }
     }
