@@ -13,7 +13,7 @@ struct Photo { // структура для UI части приложения
     let createdAt: Date?
     let welcomeDescription: String?
     let thumbImageURL: String
-    let largeImageURL: String
+    let fullImageURL: String
     let isLiked: Bool
 }
 
@@ -76,7 +76,7 @@ class ImagesListService {
                         createdAt: photo.createdAt,
                         welcomeDescription: photo.description,
                         thumbImageURL: photo.urls.thumb,
-                        largeImageURL: photo.urls.full,
+                        fullImageURL: photo.urls.full,
                         isLiked: photo.likedByUser)
                 }
                 self.photos.append(contentsOf: photosResult)
@@ -124,7 +124,7 @@ class ImagesListService {
                         createdAt: photo.createdAt,
                         welcomeDescription: photo.welcomeDescription,
                         thumbImageURL: photo.thumbImageURL,
-                        largeImageURL: photo.largeImageURL,
+                        fullImageURL: photo.fullImageURL,
                         isLiked: !photo.isLiked)
                     self.photos[index] = newPhoto
                     

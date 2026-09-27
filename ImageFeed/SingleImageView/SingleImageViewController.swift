@@ -132,19 +132,41 @@ class SingleImageViewController: UIViewController {
     }
     
     private func loadImage() {
-        guard let photo, let imageURL = URL(string: photo.largeImageURL) else { return }
-        
+        guard let photo, let imageURL = URL(string: photo.fullImageURL) else { return }
+        UIBlockingProgressHUD.show()
         imageView.kf.indicatorType = .activity
-        imageView.kf.setImage(with: imageURL, placeholder: UIImage(named: "Stub")) { [ weak self] result in
-            switch result {
-            case .success(let value):
-                let downloadedImage = value.image
-                self?.rescaleAndCenterImageInScrollView(image: downloadedImage)
-            case .failure(let error):
-                print("Ошибка загрузки \(error)")
-            }
-        }
+        setImage(with: imageURL)
     }
+    
+    func setImage(with url: URL) {
+                imageView.kf.setImage(with: url, placeholder: UIImage(named: "Stub")) { [ weak self] result in
+                    UIBlockingProgressHUD.dismiss()
+                    guard let self else { return }
+                    
+                    switch result {
+                    case .success(let value):
+                        let downloadedImage = value.image
+                        self.rescaleAndCenterImageInScrollView(image: downloadedImage)
+                    case .failure(let error):
+                        print("Ошибка загрузки \(error)")
+                        self.showError(with: url)
+                    }
+                }
+            }
+
+    
+    private func showError(with url: URL) {
+        let alert = UIAlertController(title: "Что-то пошло не так", message: "Попробовать ещё раз?", preferredStyle: .alert)
+        let actionRetry = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            guard let self else { return }
+            self.setImage(with: url)
+        }
+        let actionCancel = UIAlertAction(title: "Не надо", style: .cancel, handler: nil)
+        alert.addAction(actionRetry)
+        alert.addAction(actionCancel)
+        self.present(alert, animated: true)
+    }
+    
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
