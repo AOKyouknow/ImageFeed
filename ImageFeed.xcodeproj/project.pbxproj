@@ -16,6 +16,7 @@
 		001825773023AB2E00C2712B /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001825763023AB2E00C2712B /* SingleImageViewController.swift */; };
 		009CC6AA3061B367009D5CE0 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009CC6A93061B367009D5CE0 /* ImagesListService.swift */; };
 		009CC6B930695D12009D5CE0 /* ImagesListCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009CC6B830695D12009D5CE0 /* ImagesListCellDelegate.swift */; };
+		009CC6BB306AEB38009D5CE0 /* ProfileLogoutService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 009CC6BA306AEB38009D5CE0 /* ProfileLogoutService.swift */; };
 		00B9729030306CB2006516A8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B9728F30306CB2006516A8 /* Constants.swift */; };
 		00B9729330339152006516A8 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B9729230339152006516A8 /* AuthViewController.swift */; };
 		00B9729830346E75006516A8 /* SF-Pro-Text-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 00B9729730346E75006516A8 /* SF-Pro-Text-Bold.otf */; };
@@ -48,6 +49,7 @@
 		001825763023AB2E00C2712B /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 		009CC6A93061B367009D5CE0 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		009CC6B830695D12009D5CE0 /* ImagesListCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellDelegate.swift; sourceTree = "<group>"; };
+		009CC6BA306AEB38009D5CE0 /* ProfileLogoutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLogoutService.swift; sourceTree = "<group>"; };
 		00B9728F30306CB2006516A8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		00B9729230339152006516A8 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		00B9729730346E75006516A8 /* SF-Pro-Text-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Bold.otf"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				00013E3E301E859500F37A37 /* ProfileViewController.swift */,
 				00BDED2030595A6400BDD9B4 /* ProfileService.swift */,
 				00BDED22305DCAC400BDD9B4 /* ProfileImageService.swift */,
+				009CC6BA306AEB38009D5CE0 /* ProfileLogoutService.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				00BDED0E303F244700BDD9B4 /* URLSession+data.swift in Sources */,
 				009CC6AA3061B367009D5CE0 /* ImagesListService.swift in Sources */,
 				00013E3C301A9A9A00F37A37 /* ImagesListCell.swift in Sources */,
+				009CC6BB306AEB38009D5CE0 /* ProfileLogoutService.swift in Sources */,
 				009CC6B930695D12009D5CE0 /* ImagesListCellDelegate.swift in Sources */,
 				00B9729D3039B064006516A8 /* WebViewViewControllerDelegate.swift in Sources */,
 				00013E3F301E859500F37A37 /* ProfileViewController.swift in Sources */,

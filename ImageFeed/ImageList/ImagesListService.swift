@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Kingfisher
 
 struct Photo { // структура для UI части приложения
     let id: String
@@ -43,7 +44,8 @@ struct UrlsResult: Codable {
 class ImagesListService {
     var task: URLSessionTask?
     let token = OAuth2TokenStorage().token
-    
+    static let shared = ImagesListService()
+    private init() {}
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     
@@ -137,4 +139,8 @@ class ImagesListService {
         task.resume()
     }
     
+    func clear() {
+        self.photos = []
+        KingfisherManager.shared.cache.clearMemoryCache()
+    }
 }

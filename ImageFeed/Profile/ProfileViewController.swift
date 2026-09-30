@@ -30,6 +30,7 @@ final class ProfileViewController: UIViewController {
         }
         updateUI(with: currentProfile)
         updateAvatar()
+        logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
     }
     
     let userPhoto: UIImageView = {
@@ -39,11 +40,11 @@ final class ProfileViewController: UIViewController {
         return photo
     }()
     
-    let exitIcon: UIImageView = {
-        let icon = UIImageView()
-        icon.image = UIImage(named: "Exit")
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        return icon
+    let logoutButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "Exit"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     var nameLabel: UILabel = {
@@ -71,7 +72,7 @@ final class ProfileViewController: UIViewController {
     }()
     
     func setupUI() {
-        let photosStackView = UIStackView(arrangedSubviews: [userPhoto, exitIcon])
+        let photosStackView = UIStackView(arrangedSubviews: [userPhoto, logoutButton])
         photosStackView.translatesAutoresizingMaskIntoConstraints = false
         photosStackView.axis = .horizontal
         photosStackView.distribution = .equalSpacing
@@ -86,8 +87,8 @@ final class ProfileViewController: UIViewController {
                 
         userPhoto.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         userPhoto.setContentCompressionResistancePriority(.required, for: .horizontal)
-        exitIcon.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        exitIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+        logoutButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        logoutButton.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         [photosStackView, verticalStackView].forEach {
             view.addSubview($0)
@@ -123,5 +124,9 @@ final class ProfileViewController: UIViewController {
         else { return }
         
         userPhoto.kf.setImage(with: url)
+    }
+    
+    @objc private func didTapLogoutButton() {
+        ProfileLogoutService.shared.logout()
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 
 final class ImagesListViewController: UIViewController {
-    private let imagesListService = ImagesListService()
+    private let imagesListService = ImagesListService.shared
     private var photos: [Photo] = []
     
     private let table: UITableView = {
@@ -169,12 +169,12 @@ extension ImagesListViewController: ImagesListCellDelegate {
         
         UIBlockingProgressHUD.show()
         imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
-            
+            guard let self else { return }
             switch result {
             case .success:
-                guard let self else { return }
+                
                 self.photos = self.imagesListService.photos
-                cell.setIsLiked(isLiked: photos[indexPath.row].isLiked)
+                cell.setIsLiked(isLiked: self.photos[indexPath.row].isLiked)
                 UIBlockingProgressHUD.dismiss()
                 
             case .failure(let error):
@@ -183,7 +183,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
                 let alert = UIAlertController(title: "Что-то пошло не так", message: "Не удалось изменить статус лайка", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Ок", style: .default, handler: nil)
                 alert.addAction(action)
-                self?.present(alert, animated: true, completion: nil)
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
