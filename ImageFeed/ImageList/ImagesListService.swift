@@ -22,7 +22,7 @@ struct PhotosResult: Codable { // структура для декодинга J
     let id: String
     let width: Int
     let height: Int
-    let createdAt: Date?
+    let createdAt: String?
     let description: String?
     let urls: UrlsResult
     let likedByUser: Bool
@@ -50,6 +50,12 @@ class ImagesListService {
     private var lastLoadedPage: Int?
     
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    private let dateFormatter = ISO8601DateFormatter()
+        
+    private func date(from string: String?) -> Date? {
+        guard let string else { return nil }
+        return dateFormatter.date(from: string)
+    }
     
     func fetchPhotosNextPage() {
         let nextPage = (lastLoadedPage ?? 0) + 1
@@ -75,7 +81,7 @@ class ImagesListService {
                     return Photo(
                         id: photo.id,
                         size: CGRect(x: .zero, y: .zero, width: photo.width, height: photo.height),
-                        createdAt: photo.createdAt,
+                        createdAt: self.date(from: photo.createdAt),
                         welcomeDescription: photo.description,
                         thumbImageURL: photo.urls.thumb,
                         fullImageURL: photo.urls.full,
