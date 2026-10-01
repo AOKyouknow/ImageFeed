@@ -12,7 +12,7 @@ final class ProfileService {
     static let shared = ProfileService()
     private init () {}
     
-    let token = OAuth2TokenStorage().token
+    let token = OAuth2TokenStorage.shared.token
     var task: URLSessionTask?
     
     struct ProfileResult: Codable {
@@ -97,4 +97,7 @@ final class ProfileService {
         task.resume()
     }
     
+    func clear() {
+        self.profile = nil
+    }
 }
