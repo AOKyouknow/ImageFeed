@@ -67,10 +67,8 @@ final class ImagesListViewController: UIViewController {
         } else {
             cell.dateLabel.text = ""
         }
-        
-        //        let likeImage = photo.isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
-        //        cell.likeButton.setImage(likeImage, for: .normal)
-        cell.setIsLiked(isLiked: photo.isLiked) // ???
+       
+        cell.setIsLiked(isLiked: photo.isLiked)
     }
     
     func setupUI() {
@@ -102,10 +100,6 @@ extension ImagesListViewController: UITableViewDelegate {
         
         let photo = photos[indexPath.row]
         
-        //        guard let image = UIImage(named: photos[indexPath.row].thumbImageURL) else {
-        //            return 0
-        //        }
-        
         let imageViewWidth = tableView.bounds.width - 32 // 16+16 - отступы в ImageListCell
         
         let imageViewHeight = imageViewWidth * (photo.size.height / photo.size.width)
@@ -135,7 +129,7 @@ extension ImagesListViewController: UITableViewDelegate {
 
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photos.count
+        photos.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

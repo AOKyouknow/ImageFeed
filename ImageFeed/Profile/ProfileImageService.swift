@@ -12,7 +12,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     private var task: URLSessionTask?
-    let token = OAuth2TokenStorage().token
+    let token = OAuth2TokenStorage.shared.token
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     struct UserResult: Codable {
@@ -34,7 +34,7 @@ final class ProfileImageService {
             return nil
         }
         
-        guard let token = OAuth2TokenStorage().token
+        guard let token = OAuth2TokenStorage.shared.token
         else {
             print("[ProfileImageService/fetchProfileImageURL]: token is nil")
             return nil

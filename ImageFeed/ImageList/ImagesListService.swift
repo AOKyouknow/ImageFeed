@@ -41,15 +41,15 @@ struct UrlsResult: Codable {
 }
 
 
-class ImagesListService {
+final class ImagesListService {
     var task: URLSessionTask?
-    let token = OAuth2TokenStorage().token
+    let token = OAuth2TokenStorage.shared.token
     static let shared = ImagesListService()
     private init() {}
     private(set) var photos: [Photo] = []
     private var lastLoadedPage: Int?
     
-    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
     private let dateFormatter = ISO8601DateFormatter()
         
     private func date(from string: String?) -> Date? {
@@ -60,8 +60,8 @@ class ImagesListService {
     func fetchPhotosNextPage() {
         let nextPage = (lastLoadedPage ?? 0) + 1
         guard task == nil else { return }
-        guard let token = OAuth2TokenStorage().token else { return }
-        guard var components = URLComponents(string: "https://api.unsplash.com/photos") else { return }
+        guard let token = OAuth2TokenStorage.shared.token,
+        var components = URLComponents(string: "https://api.unsplash.com/photos") else { return }
         components.queryItems = [
             URLQueryItem(name: "page", value: String(nextPage)),
             URLQueryItem(name: "per_page", value: "10")
@@ -114,12 +114,7 @@ class ImagesListService {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
-        switch isLike {
-        case true:
-            request.httpMethod = "POST"
-        case false:
-            request.httpMethod = "DELETE"
-        }
+        request.httpMethod = isLike ? "POST" : "DELETE"
         
         let task = URLSession.shared.data(for: request) { result in
             switch result {

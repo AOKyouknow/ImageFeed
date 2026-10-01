@@ -85,8 +85,6 @@ final class ProfileViewController: UIViewController {
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 8
-//        verticalStackView.distribution = .fill
-//        verticalStackView.alignment = .leading
                 
         userPhoto.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         userPhoto.setContentCompressionResistancePriority(.required, for: .horizontal)

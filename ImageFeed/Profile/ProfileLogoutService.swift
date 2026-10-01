@@ -8,7 +8,7 @@
 import Foundation
 import WebKit
 
-class ProfileLogoutService {
+final class ProfileLogoutService {
     
     static let shared = ProfileLogoutService()
     
@@ -16,7 +16,7 @@ class ProfileLogoutService {
     
     func logout() {
         assert(Thread.isMainThread)
-        OAuth2TokenStorage().token = nil
+        OAuth2TokenStorage.shared.token = nil
         cleanCookies()
         
         ProfileService.shared.clear()
