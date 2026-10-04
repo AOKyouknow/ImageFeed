@@ -30,26 +30,30 @@ final class ProfileViewController: UIViewController {
         }
         updateUI(with: currentProfile)
         updateAvatar()
+        logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
     }
     
     let userPhoto: UIImageView = {
         let photo = UIImageView()
         photo.image = UIImage(resource: .photo)
         photo.translatesAutoresizingMaskIntoConstraints = false
+        photo.contentMode = .scaleAspectFill
+        photo.clipsToBounds = true
+        photo.layer.cornerRadius = 35
         return photo
     }()
     
-    let exitIcon: UIImageView = {
-        let icon = UIImageView()
-        icon.image = UIImage(named: "Exit")
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        return icon
+    let logoutButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "Exit"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     var nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
-        nameLabel.font = UIFont(name: "SFProText-Bold", size: 23)
+        nameLabel.font = UIFont(name: "SFProText-Bold", size: 23) ?? .systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = UIColor(named: "YP White")
         return nameLabel
     }()
@@ -57,7 +61,7 @@ final class ProfileViewController: UIViewController {
     let loginLabel: UILabel = {
         let loginLabel = UILabel()
         loginLabel.text = "@ekaterina_nov"
-        loginLabel.font = UIFont(name: "SF Pro", size: 13)
+        loginLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         loginLabel.textColor = UIColor(named: "YP Gray (iOS)")
         return loginLabel
     }()
@@ -65,13 +69,13 @@ final class ProfileViewController: UIViewController {
     let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
         descriptionLabel.text = "Hello, world!"
-        descriptionLabel.font = UIFont(name: "SF Pro", size: 13)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         descriptionLabel.textColor = UIColor(named: "YP White")
         return descriptionLabel
     }()
     
     func setupUI() {
-        let photosStackView = UIStackView(arrangedSubviews: [userPhoto, exitIcon])
+        let photosStackView = UIStackView(arrangedSubviews: [userPhoto, logoutButton])
         photosStackView.translatesAutoresizingMaskIntoConstraints = false
         photosStackView.axis = .horizontal
         photosStackView.distribution = .equalSpacing
@@ -81,19 +85,19 @@ final class ProfileViewController: UIViewController {
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 8
-        verticalStackView.distribution = .fill
-        verticalStackView.alignment = .leading
                 
         userPhoto.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         userPhoto.setContentCompressionResistancePriority(.required, for: .horizontal)
-        exitIcon.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        exitIcon.setContentCompressionResistancePriority(.required, for: .horizontal)
+        logoutButton.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        logoutButton.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         [photosStackView, verticalStackView].forEach {
             view.addSubview($0)
         }
         
         NSLayoutConstraint.activate([
+            userPhoto.widthAnchor.constraint(equalToConstant: 70),
+            userPhoto.heightAnchor.constraint(equalToConstant: 70),
             photosStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 76),
             photosStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             photosStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -122,6 +126,28 @@ final class ProfileViewController: UIViewController {
             let url = URL(string: profileImageURL)
         else { return }
         
-        userPhoto.kf.setImage(with: url)
+        userPhoto.kf.setImage(with: url, placeholder: UIImage(resource: .photo))
+    }
+    
+    @objc private func didTapLogoutButton() {
+        showLogoutAlert()
+    }
+    
+    private func showLogoutAlert() {
+        let alert = UIAlertController(
+            title: "Выйти из аккаунта?",
+            message: "Вам будет нужно войти заново",
+            preferredStyle: .alert
+        )
+        
+        let logoutAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
+            ProfileLogoutService.shared.logout()
+        }
+        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
+        
+        alert.addAction(logoutAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
     }
 }

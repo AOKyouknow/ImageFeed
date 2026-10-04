@@ -54,7 +54,7 @@ final class AuthViewController: UIViewController {
     private func setupUI() {
         view.addSubview(logoOfUnsplash)
         view.addSubview(loginButton)
-        
+        view.backgroundColor = .launchScreen
         
         logoOfUnsplash.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         logoOfUnsplash.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true

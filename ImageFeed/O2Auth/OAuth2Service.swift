@@ -35,7 +35,7 @@ final class OAuth2Service {
         switch result {
         case .success(let body):
             let token = body.accessToken
-            OAuth2TokenStorage().token = token
+            OAuth2TokenStorage.shared.token = token
             completion(.success(token))
             
         case .failure(let error):

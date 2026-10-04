@@ -1,0 +1,147 @@
+//
+//  ImageListService.swift
+//  ImageFeed
+//
+//  Created by Алик on 21.09.2026.
+//
+
+import Foundation
+import Kingfisher
+
+struct Photo { // структура для UI части приложения
+    let id: String
+    let size: CGRect
+    let createdAt: Date?
+    let welcomeDescription: String?
+    let thumbImageURL: String
+    let fullImageURL: String
+    let isLiked: Bool
+}
+
+struct PhotosResult: Codable { // структура для декодинга JSON
+    let id: String
+    let width: Int
+    let height: Int
+    let createdAt: String?
+    let description: String?
+    let urls: UrlsResult
+    let likedByUser: Bool
+    
+    enum CodingKeys: String, CodingKey {
+        case id, width, height, description, urls
+        case createdAt = "created_at"
+        case likedByUser = "liked_by_user"
+    }
+    
+    
+}
+struct UrlsResult: Codable {
+    let thumb: String
+    let full: String
+}
+
+
+final class ImagesListService {
+    var task: URLSessionTask?
+    let token = OAuth2TokenStorage.shared.token
+    static let shared = ImagesListService()
+    private init() {}
+    private(set) var photos: [Photo] = []
+    private var lastLoadedPage: Int?
+    
+    static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
+    private let dateFormatter = ISO8601DateFormatter()
+        
+    private func date(from string: String?) -> Date? {
+        guard let string else { return nil }
+        return dateFormatter.date(from: string)
+    }
+    
+    func fetchPhotosNextPage() {
+        let nextPage = (lastLoadedPage ?? 0) + 1
+        guard task == nil else { return }
+        guard let token = OAuth2TokenStorage.shared.token,
+        var components = URLComponents(string: "https://api.unsplash.com/photos") else { return }
+        components.queryItems = [
+            URLQueryItem(name: "page", value: String(nextPage)),
+            URLQueryItem(name: "per_page", value: "10")
+        ]
+        guard let url = components.url else { return }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.objectTask(for: request) { [ weak self ] (result: Result<[PhotosResult],Error>) in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let photosResultArray):
+                let photosResult = photosResultArray.map { photo in
+                    return Photo(
+                        id: photo.id,
+                        size: CGRect(x: .zero, y: .zero, width: photo.width, height: photo.height),
+                        createdAt: self.date(from: photo.createdAt),
+                        welcomeDescription: photo.description,
+                        thumbImageURL: photo.urls.thumb,
+                        fullImageURL: photo.urls.full,
+                        isLiked: photo.likedByUser)
+                }
+                self.photos.append(contentsOf: photosResult)
+                self.lastLoadedPage = nextPage
+                NotificationCenter.default.post(
+                    name: ImagesListService.didChangeNotification,
+                    object: self)
+            case .failure(let error):
+                print("[ImageListService/fetchPhotosNextPage]: \(error)")
+            }
+            self.task = nil
+        }
+        self.task = task
+        task.resume()
+        
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {
+            assertionFailure("Failed to create URL")
+            return
+        }
+        guard let token else {
+            print("[ImageListService]: token is nil")
+            return
+        }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        
+        let task = URLSession.shared.data(for: request) { result in
+            switch result {
+            case .success:
+                if let index = self.photos.firstIndex(where: {$0.id == photoId}) {
+                    let photo = self.photos[index]
+                    let newPhoto = Photo(
+                        id: photo.id,
+                        size: photo.size,
+                        createdAt: photo.createdAt,
+                        welcomeDescription: photo.welcomeDescription,
+                        thumbImageURL: photo.thumbImageURL,
+                        fullImageURL: photo.fullImageURL,
+                        isLiked: !photo.isLiked)
+                    self.photos[index] = newPhoto
+                    
+                    completion(.success(()))
+                }
+            case .failure(let error): completion(.failure(error))
+                
+            }
+        }
+        task.resume()
+    }
+    
+    func clear() {
+        self.photos = []
+        KingfisherManager.shared.cache.clearMemoryCache()
+    }
+}

@@ -5,13 +5,13 @@
 //  Created by Алик on 29.07.2026.
 //
 
-import Foundation
 import UIKit
+import Kingfisher
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     
-    
+    weak var delegate: ImagesListCellDelegate?
     
     // Основная картинка
     let cellImageView: UIImageView = {
@@ -47,6 +47,7 @@ final class ImagesListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+        likeButton.addTarget(self, action: #selector(likeButtonClicked), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder) {
@@ -62,8 +63,8 @@ final class ImagesListCell: UITableViewCell {
         selectionStyle = .none
         
         contentView.addSubview(cellImageView)
-        cellImageView.addSubview(dateLabel)
-        cellImageView.addSubview(likeButton)
+        contentView.addSubview(dateLabel)
+        contentView.addSubview(likeButton)
         
         
         
@@ -84,4 +85,19 @@ final class ImagesListCell: UITableViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // отменяем операцию Kingfisher при переиспользовании
+        //fullsizeImageView.kf.cancelDownloadTask()
+        cellImageView.kf.cancelDownloadTask()
+    }
+    
+    @objc private func likeButtonClicked() {
+        delegate?.imagesListCellDidTapLike(self)
+    }
+    
+    func setIsLiked(isLiked: Bool) {
+        let likeImage = isLiked ? UIImage(resource: .active) : UIImage(resource: .noActive)
+        likeButton.setImage(likeImage, for: .normal)
+    }
 }

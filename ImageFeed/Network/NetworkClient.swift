@@ -11,7 +11,7 @@ enum NetworkErrorForClient: Error {
     case codeError
 }
 
-class NetworkClient {
+final class NetworkClient {
     func fetch(request: URLRequest, handler: @escaping (Result<Data, Error>) -> Void) {
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
