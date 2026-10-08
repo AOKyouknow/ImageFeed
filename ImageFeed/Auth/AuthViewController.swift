@@ -36,7 +36,8 @@ final class AuthViewController: UIViewController {
         
         let buttonAction = UIAction { [weak self] _ in
             guard let self else { return }
-            self.navigationController?.pushViewController(self.webViewViewController, animated: true)
+           // self.navigationController?.pushViewController(self.webViewViewController, animated: true)
+            self.didTapLoginButton()
         }
         loginButton.addAction(buttonAction, for: .touchUpInside)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
@@ -48,7 +49,15 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         configureBackButton()
-        webViewViewController.delegate = self
+        //webViewViewController.delegate = self
+    }
+    
+    private func didTapLoginButton() {
+        let webViewPresenter = WebViewPresenter()
+                webViewViewController.presenter = webViewPresenter
+                webViewPresenter.view = webViewViewController
+                webViewViewController.delegate = self
+        navigationController?.pushViewController(webViewViewController, animated: true)
     }
     
     private func setupUI() {
