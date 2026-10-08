@@ -48,14 +48,30 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         presenter?.viewDidLoad()// РЕФАКТОРИНГ
         //updateProgress()// РЕФАКТОРИНГ  !!!!!!!!!!!!!!!!
         
-        estimatedProgressObservation = webView.observe(
-                    \.estimatedProgress,
-                    options: [.new],
-                    changeHandler: { [weak self] _, _ in
-                        guard let self = self else { return }
-                        //self.updateProgress() // !!!!!!!!!!!!!!!
-                    }
-                )
+//        estimatedProgressObservation = webView.observe(
+//                    \.estimatedProgress,
+//                    options: [.new],
+//                    changeHandler: { [weak self] _, _ in
+//                        guard let self = self else { return }
+//                        //self.updateProgress() // !!!!!!!!!!!!!!!
+//                    }
+//                )
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // NOTE: Since the class is marked as `final` we don't need to pass a context.
+        // In case of inhertiance context must not be nil.
+        webView.addObserver(
+            self,
+            forKeyPath: #keyPath(WKWebView.estimatedProgress),
+            options: .new,
+            context: nil)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
     
     override func observeValue(
@@ -64,8 +80,6 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         change: [NSKeyValueChangeKey : Any]?,
         context: UnsafeMutableRawPointer?) {
             if keyPath == #keyPath(WKWebView.estimatedProgress) {
-                //self.setProgressValue(Float(keyPath ?? "") ?? 0.0) // ???
-                //updateProgress() // !!!!!!!!!!!!!!!!!!
                 presenter?.didUpdateProgressValue(webView.estimatedProgress)
             } else {
                 super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -142,18 +156,25 @@ extension WebViewViewController: WKNavigationDelegate {
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String? {
-        if
-            let url = navigationAction.request.url,
-            let urlComponents = URLComponents(string: url.absoluteString),
-            urlComponents.path == "/oauth/authorize/native",
-            let items = urlComponents.queryItems,
-            let codeItem = items.first(where: { $0.name == "code" })
-        {
-            return codeItem.value
-        } else {
-            return nil
+        if let url = navigationAction.request.url {
+            return presenter?.code(from: url)
         }
+        return nil
     }
+    
+//    private func code(from navigationAction: WKNavigationAction) -> String? {
+//        if
+//            let url = navigationAction.request.url,
+//            let urlComponents = URLComponents(string: url.absoluteString),
+//            urlComponents.path == "/oauth/authorize/native",
+//            let items = urlComponents.queryItems,
+//            let codeItem = items.first(where: { $0.name == "code" })
+//        {
+//            return codeItem.value
+//        } else {
+//            return nil
+//        }
+//    }
     
     
 }
