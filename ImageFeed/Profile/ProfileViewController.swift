@@ -39,6 +39,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
     
@@ -47,6 +48,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont(name: "SFProText-Bold", size: 23) ?? .systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = UIColor(named: "YP White")
+        nameLabel.accessibilityIdentifier = "Name Lastname"
         return nameLabel
     }()
     
@@ -55,6 +57,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         loginLabel.text = "@ekaterina_nov"
         loginLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         loginLabel.textColor = UIColor(named: "YP Gray (iOS)")
+        loginLabel.accessibilityIdentifier = "@username"
         return loginLabel
     }()
     
