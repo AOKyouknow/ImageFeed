@@ -16,29 +16,12 @@ protocol ProfileViewControllerProtocol: AnyObject {
 
 final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     var presenter: ProfilePresenterProtocol?
-    //let profileService = ProfileService.shared
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
-//        NotificationCenter.default.addObserver(
-//                forName: ProfileImageService.didChangeNotification,
-//                object: nil,
-//                queue: .main
-//            ) { [weak self] _ in
-//                self?.updateAvatar()
-//            }
-        
-        
-        
         presenter?.viewDidLoad()
-//        guard let currentProfile = profileService.profile else {
-//            print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
-//            return
-//        }
-        //updateUI(with: currentProfile)
-        //updateAvatar()
         logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
     }
     
@@ -117,55 +100,16 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         ])
     }
     
-//    func updateUI(with profile: ProfileService.Profile) {
-//        nameLabel.text = profile.name.isEmpty
-//        ? "имя не указано"
-//        : profile.name
-//        loginLabel.text = profile.loginName.isEmpty
-//        ? "неизвестный пользователь"
-//        : profile.loginName
-//        descriptionLabel.text = (profile.bio?.isEmpty ?? true) //
-//        ? "Профиль не заполнен"
-//        : profile.bio
-//    }
     func setAvatar(with url: URL) {
         userPhoto.kf.setImage(with: url, placeholder: UIImage(resource: .photo))
     }
     
-//    private func updateAvatar() {
-//        guard
-//            let profileImageURL = ProfileImageService.shared.avatarURL,
-//            let url = URL(string: profileImageURL)
-//        else { return }
-//        
-//        userPhoto.kf.setImage(with: url, placeholder: UIImage(resource: .photo))
-//    }
-    
-//    @objc private func didTapLogoutButton() {
-//        showLogoutAlert()
-//    }
     
     @objc private func didTapLogoutButton() {
-        presenter?.didTapLogoutButton() // Просто передаем событие дальше
+        presenter?.didTapLogoutButton()
     }
     
-//    private func showLogoutAlert() {
-//        let alert = UIAlertController(
-//            title: "Выйти из аккаунта?",
-//            message: "Вам будет нужно войти заново",
-//            preferredStyle: .alert
-//        )
-//        
-//        let logoutAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
-//            ProfileLogoutService.shared.logout()
-//        }
-//        let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
-//        
-//        alert.addAction(logoutAction)
-//        alert.addAction(cancelAction)
-//        
-//        present(alert, animated: true)
-//    }
+    
     func showLogoutAlert() {
         let alert = UIAlertController(
             title: "Выйти из аккаунта?",
@@ -174,7 +118,6 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         )
         
         let logoutAction = UIAlertAction(title: "Выйти", style: .destructive) { [weak self] _ in
-            // Вместо вызова сервиса напрямую, говорим презентеру, что надо выйти
             self?.presenter?.logOut()
         }
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
