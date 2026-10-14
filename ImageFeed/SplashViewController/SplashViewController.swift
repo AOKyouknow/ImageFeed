@@ -21,6 +21,8 @@ final class SplashViewController: UIViewController {
         } else {
             let authViewController = AuthViewController()
             authViewController.delegate = self
+            let authHelper = AuthHelper()
+            authViewController.authHelper = authHelper
             
             let navigationController = UINavigationController(rootViewController: authViewController)
                 navigationController.modalPresentationStyle = .fullScreen

@@ -35,13 +35,20 @@ final class TabBarController: UITabBarController {
             image: UIImage(named: "tabBar2"),
             tag: 0
         )
+        let imagesListPresenter = ImagesListPresenter()
+        imagesListViewController.presenter = imagesListPresenter
+        imagesListPresenter.view = imagesListViewController
         
         let profileViewController = ProfileViewController()
+        let profilePresenter = ProfilePresenter()
+        profileViewController.presenter = profilePresenter
+        profilePresenter.view = profileViewController
         profileViewController.tabBarItem = UITabBarItem(
-            title: nil,
-            image: UIImage(named: "tabBar1"),
-            tag: 1
-        )
+                    title: nil,
+                    image: UIImage(named: "tabBar1"),
+                    tag: 1
+                )
+                
         
         viewControllers = [
             imagesListViewController,

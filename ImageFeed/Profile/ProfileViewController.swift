@@ -8,28 +8,20 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    func updateProfileDetails(name: String, login: String, bio: String)
+    func setAvatar(with url: URL)
+    func showLogoutAlert()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
+    var presenter: ProfilePresenterProtocol?
     
-    let profileService = ProfileService.shared
-        
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(resource: .launchScreen)
         setupUI()
-        NotificationCenter.default.addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.updateAvatar()
-            }
-
-        guard let currentProfile = profileService.profile else {
-            print("Экран профиля открылся, но данные в ProfileService.shared не загружены")
-            return
-        }
-        updateUI(with: currentProfile)
-        updateAvatar()
+        presenter?.viewDidLoad()
         logoutButton.addTarget(self, action: #selector(didTapLogoutButton), for: .touchUpInside)
     }
     
@@ -47,6 +39,7 @@ final class ProfileViewController: UIViewController {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Exit"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "logout button"
         return button
     }()
     
@@ -55,6 +48,7 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont(name: "SFProText-Bold", size: 23) ?? .systemFont(ofSize: 23, weight: .bold)
         nameLabel.textColor = UIColor(named: "YP White")
+        nameLabel.accessibilityIdentifier = "Name Lastname"
         return nameLabel
     }()
     
@@ -63,6 +57,7 @@ final class ProfileViewController: UIViewController {
         loginLabel.text = "@ekaterina_nov"
         loginLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         loginLabel.textColor = UIColor(named: "YP Gray (iOS)")
+        loginLabel.accessibilityIdentifier = "@username"
         return loginLabel
     }()
     
@@ -108,40 +103,25 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    func updateUI(with profile: ProfileService.Profile) {
-        nameLabel.text = profile.name.isEmpty
-        ? "имя не указано"
-        : profile.name
-        loginLabel.text = profile.loginName.isEmpty
-        ? "неизвестный пользователь"
-        : profile.loginName
-        descriptionLabel.text = (profile.bio?.isEmpty ?? true) //
-        ? "Профиль не заполнен"
-        : profile.bio
-    }
-    
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
-        
+    func setAvatar(with url: URL) {
         userPhoto.kf.setImage(with: url, placeholder: UIImage(resource: .photo))
     }
     
+    
     @objc private func didTapLogoutButton() {
-        showLogoutAlert()
+        presenter?.didTapLogoutButton()
     }
     
-    private func showLogoutAlert() {
+    
+    func showLogoutAlert() {
         let alert = UIAlertController(
             title: "Выйти из аккаунта?",
             message: "Вам будет нужно войти заново",
             preferredStyle: .alert
         )
         
-        let logoutAction = UIAlertAction(title: "Выйти", style: .destructive) { _ in
-            ProfileLogoutService.shared.logout()
+        let logoutAction = UIAlertAction(title: "Выйти", style: .destructive) { [weak self] _ in
+            self?.presenter?.logOut()
         }
         let cancelAction = UIAlertAction(title: "Отмена", style: .cancel)
         
@@ -150,4 +130,10 @@ final class ProfileViewController: UIViewController {
         
         present(alert, animated: true)
     }
+    
+    func updateProfileDetails(name: String, login: String, bio: String) {
+            nameLabel.text = name
+            loginLabel.text = login
+            descriptionLabel.text = bio
+        }
 }

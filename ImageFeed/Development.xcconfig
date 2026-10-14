@@ -1,0 +1,10 @@
+//
+//  Development.xcconfig
+//  ImageFeed
+//
+//  Created by Алик on 14.10.2026.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+UNSPLASH_API_KEY = zYe_4nBSaOEPAw9fuKPsCQNNRd8O0T6wWCMCyoOJ2zo
