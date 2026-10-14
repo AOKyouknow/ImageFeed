@@ -14,9 +14,9 @@ protocol ProfilePresenterProtocol {
     func logOut()
 }
 
-class ProfilePresenter: ProfilePresenterProtocol {
+final class ProfilePresenter: ProfilePresenterProtocol {
     weak var view: ProfileViewControllerProtocol?
-    let profileService = ProfileService.shared
+    private let profileService = ProfileService.shared
     
     func viewDidLoad() {
             guard let currentProfile = profileService.profile else {

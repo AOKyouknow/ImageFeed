@@ -12,19 +12,19 @@ protocol AuthHelperProtocol {
     func code(from url: URL) -> String?
 }
 
-class AuthHelper: AuthHelperProtocol {
-    let configuration: AuthConfiguration
-
+final class AuthHelper: AuthHelperProtocol {
+    private let configuration: AuthConfiguration
+    
     init(configuration: AuthConfiguration = .standard) {
-            self.configuration = configuration
-        }
+        self.configuration = configuration
+    }
     
     func authRequest() -> URLRequest? {
         guard let url = authURL() else { return nil }
         
         return URLRequest(url: url)
     }
-
+    
     func authURL() -> URL? {
         guard var urlComponents = URLComponents(string: configuration.authURLString) else {
             return nil

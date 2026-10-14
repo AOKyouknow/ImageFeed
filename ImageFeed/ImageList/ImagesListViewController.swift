@@ -63,7 +63,7 @@ final class ImagesListViewController: UIViewController {
         guard let imageURL = URL(string: photo.thumbImageURL) else { return }
         
         cell.cellImageView.kf.indicatorType = .activity
-        cell.cellImageView.kf.setImage(with: imageURL, placeholder: UIImage(named: "Stub")) { [weak self] result in
+        cell.cellImageView.kf.setImage(with: imageURL, placeholder: UIImage(resource: .stub)) { [weak self] result in
             guard let self = self else { return }
             if case .success = result {
                 self.table.performBatchUpdates(nil, completion: nil)

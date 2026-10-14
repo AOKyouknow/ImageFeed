@@ -7,7 +7,7 @@
 @testable import ImageFeed
 import XCTest
 
-final class ImageFeedTests: XCTestCase {
+final class WebViewTests: XCTestCase {
     
     //
     func testViewControllerCallsViewDidLoad() {

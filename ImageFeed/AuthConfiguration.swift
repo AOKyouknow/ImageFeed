@@ -9,7 +9,12 @@ import Foundation
 
 enum Constants {
     
-    static let accessKey = "zYe_4nBSaOEPAw9fuKPsCQNNRd8O0T6wWCMCyoOJ2zo"
+    static var accessKey: String {
+            guard let key = Bundle.main.object(forInfoDictionaryKey: "UnsplashAPIKey") as? String else {
+                fatalError("Ошибка: API-ключ не найден в Info.plist")
+            }
+            return key
+        }
     
     static let secretKey = "b-6E5Cf8a8AfLyd-0NEDO0wm_CmeHE9elzDJab6GPXo"
     
@@ -26,7 +31,13 @@ enum Constants {
     static let httpResponseMaxCode = 300
     
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
+    
+    static let buttonIdentifier = "Authenticate"
+    
+    static let imageViewWidth = 32
 }
+
+
 
 struct AuthConfiguration {
     let accessKey: String
@@ -36,21 +47,14 @@ struct AuthConfiguration {
     let defaultBaseURLString: String
     let authURLString: String
 
-    init(accessKey: String, secretKey: String, redirectURI: String, accessScope: String, authURLString: String, defaultBaseURLString: String) {
-        self.accessKey = accessKey
-        self.secretKey = secretKey
-        self.redirectURI = redirectURI
-        self.accessScope = accessScope
-        self.defaultBaseURLString = defaultBaseURLString
-        self.authURLString = authURLString
-    }
-    
     static var standard: AuthConfiguration {
-            return AuthConfiguration(accessKey: Constants.accessKey,
+            AuthConfiguration(accessKey: Constants.accessKey,
                                      secretKey: Constants.secretKey,
                                      redirectURI: Constants.redirectURI,
                                      accessScope: Constants.accessScope,
-                                     authURLString: Constants.unsplashAuthorizeURLString,
-                                     defaultBaseURLString: Constants.defaultBaseURLString)
+                                     defaultBaseURLString: Constants.defaultBaseURLString,
+                                     authURLString: Constants.unsplashAuthorizeURLString
+            )
         }
 }
+
