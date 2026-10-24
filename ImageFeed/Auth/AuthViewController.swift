@@ -16,6 +16,7 @@ final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
     private let oauth2Service = OAuth2Service()
     private let webViewViewController = WebViewViewController()
+    var authHelper: AuthHelperProtocol?
     
     private let logoOfUnsplash: UIImageView = {
         let logoOfUnsplash = UIImageView()
@@ -36,10 +37,11 @@ final class AuthViewController: UIViewController {
         
         let buttonAction = UIAction { [weak self] _ in
             guard let self else { return }
-            self.navigationController?.pushViewController(self.webViewViewController, animated: true)
+            self.didTapLoginButton()
         }
         loginButton.addAction(buttonAction, for: .touchUpInside)
         loginButton.translatesAutoresizingMaskIntoConstraints = false
+        loginButton.accessibilityIdentifier = Constants.buttonIdentifier
         return loginButton
     }()
     
@@ -48,7 +50,21 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         configureBackButton()
+        //webViewViewController.delegate = self
+    }
+    
+    private func didTapLoginButton() {
+        guard let authHelper = authHelper else {
+            print("Ошибка: authHelper не был внедрен в AuthViewController")
+            return
+        }
+        
+        let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+        //let webViewPresenter = WebViewPresenter()
+        webViewViewController.presenter = webViewPresenter
+        webViewPresenter.view = webViewViewController
         webViewViewController.delegate = self
+        navigationController?.pushViewController(webViewViewController, animated: true)
     }
     
     private func setupUI() {
